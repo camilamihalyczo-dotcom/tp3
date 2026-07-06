@@ -1,0 +1,66 @@
+A Contrarreloj
+TP3 – Info Aplicada 1 (UNA 2026)
+Minijuego interactivo bidimensional desarrollado en p5.js.
+---
+Sobre el juego
+Estás llegando tarde y tenés que salir de casa. Dos jugadores compiten en la misma pantalla para juntar sus cosas —llaves, celular, billetera, zapato— antes de que se acabe el tiempo. Cuidado con el gato: cruzarse con él te hace perder puntos.
+Gana quien tenga más puntos cuando el reloj llegue a cero.
+---
+Manual de juego
+Objetivo
+Recolectar la mayor cantidad de objetos posible en 45 segundos. El jugador con más puntos al terminar el tiempo gana la partida.
+Controles
+Jugador	Mover
+Jugador 1 (amarillo)	`W` `A` `S` `D`
+Jugador 2 (naranja)	Flechas del teclado (`↑` `↓` `←` `→`)
+Objetos en pantalla
+Objeto	Efecto
+Llave	+1 punto
+Celular	+1 punto
+Billetera	+1 punto
+Zapato	+1 punto
+Gato (trampa)	−1 punto
+Condición de victoria
+Al llegar a 0 segundos, gana el jugador con más puntos. Si ambos tienen el mismo puntaje, es empate.
+Flujo de pantallas
+Menú — pantalla de título. Presioná `ESPACIO` para continuar.
+Instrucciones — controles, objetos y autoría. Presioná `ESPACIO` para empezar la partida.
+Juego — loop principal: moverse, recolectar y esquivar la trampa antes de que se acabe el tiempo.
+Fin — muestra el resultado y los puntajes finales. Presioná `R` para volver al menú y jugar de nuevo.
+---
+Tecnología
+p5.js (librería principal, vía CDN)
+p5.sound (efectos de sonido y loop de alarma)
+Google Fonts: Permanent Marker (títulos) y Kalam (texto general)
+Programación orientada a objetos: clases `Jugador` e `Item`
+Máquina de estados con 4 pantallas diferenciadas
+Detección de colisiones por distancia radial
+Control de tiempo con `millis()`
+---
+Estructura del proyecto
+```
+├── index.html
+├── sketch.js
+└── assets/
+    ├── img/
+    │   ├── jugador1.png
+    │   ├── jugador2.png
+    │   ├── llave.png
+    │   ├── celular.png
+    │   ├── billetera.png
+    │   ├── zapato.png
+    │   └── gato.png
+    └── audio/
+        ├── recolectar.mp3
+        ├── trampa.mp3
+        └── alarma.mp3
+```
+---
+Cómo probarlo localmente
+Cloná el repositorio.
+Abrí la carpeta en VS Code.
+Usá la extensión Live Server y hacé clic en "Open with Live Server" sobre `index.html`.
+(No abrir el archivo directamente por doble clic — los navegadores bloquean la carga de imágenes y sonidos por CORS si no corre en un servidor local).
+---
+Autoría
+Camila Mihalyczo, Ana Robledo y Álvaro Oxley — UNA 2026 — Info Aplicada 1 (Prof. David Bedoian)
