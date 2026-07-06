@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>A Contrarreloj - TP3</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; overflow: hidden; background: #111; }
+  canvas { display: block; margin: auto; }
+</style>
+</head>
+<body>
+<script src="sketch.js"></script>
+<!--
+<script>
+
+// ======================================================
+// TP3 - Minijuego "A Contrarreloj"
+// Máquina de estados: MENU -> INSTRUCCIONES -> JUEGO -> FIN
+// ======================================================
+
+let gameState = "MENU"; // controla qué pantalla se dibuja: MENU, INSTRUCCIONES, JUEGO, FIN
+let pausado = false;    // true mientras el juego está en pausa (se activa con click o tecla P)
+let tiempoAcumuladoPausa = 0; // milisegundos totales que estuvo en pausa, para no desviar el timer
+let momentoInicioPausa = 0;   // millis() de cuando arrancó la pausa actual
+
+// --- Configuración general de pantalla y partida ---
+const ANCHO = 800;
+const ALTO = 500;
+const DURACION_PARTIDA = 45; // duración de la partida en segundos
+let tiempoInicio = 0;        // momento (millis) en que arrancó la partida
+let tiempoRestante = DURACION_PARTIDA;
+
+// --- Botones clickeables (requisito de interactividad por mouse/touch) ---
+// Se definen como rectángulos {x, y, w, h} para poder chequear si el
+// mouse está encima (hover) y si se hizo click adentro.
+const BOTON_PAUSA = { x: ANCHO - 44, y: 10, w: 34, h: 34 };
+const BOTON_MENU = { x: ANCHO / 2 - 90, y: 350, w: 180, h: 45 };        // "JUGAR" en el menú
+const BOTON_INSTRUCCIONES = { x: ANCHO / 2 - 90, y: 440, w: 180, h: 45 }; // "JUGAR" en instrucciones
+const BOTON_REINICIAR = { x: ANCHO / 2 - 90, y: ALTO / 2 + 90, w: 180, h: 45 }; // "REINICIAR" en pantalla de fin
+
+// --- Paleta de colores "mañana caótica" ---
+const COLOR_FONDO = [43, 45, 66];       // gris azulado oscuro
+const COLOR_ALERTA = [255, 107, 53];    // naranja alarma
+const COLOR_ACENTO = [255, 200, 87];    // amarillo luz
+const COLOR_TRAMPA = [230, 57, 70];     // rojo trampa
+const COLOR_J1 = [255, 200, 87];        // jugador 1 (amarillo)
+const COLOR_J2 = [255, 107, 53];        // jugador 2 (naranja)
+
+let fuenteTitulo; // fuente tipo marcador para títulos
+
+// --- Autoría (mostrar en pantalla de instrucciones/créditos) ---
+const AUTORIA = "Camila, Ana Robledo y Álvaro Oxley — UNA 2026 — Info Aplicada 1";
+
+// --- Sprites: se cargan en preload() y se dibujan con imageMode(CENTER) ---
+// Van en la carpeta assets/img/, con estos nombres exactos:
+// jugador1.png, jugador2.png, llave.png, celular.png, billetera.png,
+// zapato.png, gato.png (todos PNG con fondo transparente).
+// Tamaños de referencia (a los que se escala automáticamente, no importa
+// el tamaño real del PNG):
+let imgJugador1, imgJugador2;      // referencia: 40 x 50 px
+let imgLlave, imgCelular, imgBilletera, imgZapato; // referencia: ver TAM_ITEM abajo
+let imgGato;                        // trampa, referencia: 20 x 22 px
+
+// Tamaños de referencia (ancho, alto) para cada tipo de ítem
+const TAM_ITEM = {
+  llave:     { w: 28, h: 14 },
+  celular:   { w: 14, h: 20 },
+  billetera: { w: 20, h: 14 },
+  zapato:    { w: 20, h: 10 },
+  gato:      { w: 20, h: 22 },
+  jugador:   { w: 40, h: 50 },
+};
+
+// --- Sonidos: se cargan en preload() (carpeta assets/audio/) ---
+// Nombres exactos: recolectar.mp3, trampa.mp3, alarma.mp3
+let sonidoRecolectar; // se reproduce al agarrar un ítem bueno
+let sonidoTrampa;     // se reproduce al chocar con el gato
+let sonidoAlarma;     // loop de fondo durante el juego, sensación de apuro
+
+// --- Jugadores ---
+let jugador1, jugador2;
+
+// --- Ítems en pantalla (objetos que buscás para salir) ---
+let items = [];
+let intervaloSpawn = 45; // cada cuántos frames aparece un ítem nuevo
+let contadorSpawn = 0;
+
+// --- Tipos de objetos a recolectar (no son trampa) ---
+const TIPOS_OBJETO = ["llave", "celular", "billetera", "zapato"];
+
+// ======================================================
+// CLASE Jugador (OOP): maneja posición, movimiento y puntos
+// ======================================================
+class Jugador {
+  constructor(x, y, color, teclas, nombre) {
+    this.x = x;
+    this.y = y;
+    this.r = 18;
+    this.velocidad = 4;
+    this.color = color;
+    this.teclas = teclas; // objeto con las 4 teclas de movimiento
+    this.puntos = 0;
+    this.nombre = nombre;
+    this.mirandoDer = true; // para orientar el dibujo del personaje
+  }
+
+  // Lee el teclado y mueve al jugador dentro de los límites del canvas
+  mover() {
+    if (keyIsDown(this.teclas.izquierda)) { this.x -= this.velocidad; this.mirandoDer = false; }
+    if (keyIsDown(this.teclas.derecha))   { this.x += this.velocidad; this.mirandoDer = true; }
+    if (keyIsDown(this.teclas.arriba))    this.y -= this.velocidad;
+    if (keyIsDown(this.teclas.abajo))     this.y += this.velocidad;
+
+    this.x = constrain(this.x, this.r, ANCHO - this.r);
+    this.y = constrain(this.y, this.r, ALTO - this.r);
+  }
+
+  // Dibuja al jugador. Si hay un sprite cargado (imgJugador1/2) lo usa,
+  // escalado siempre al tamaño de referencia TAM_ITEM.jugador; si no,
+  // dibuja la silueta simple como fallback (para poder probar sin sprites).
+  mostrar(sprite) {
+    push();
+    translate(this.x, this.y);
+    if (!this.mirandoDer) scale(-1, 1); // espeja el dibujo si va para la izquierda
+
+    if (sprite) {
+      imageMode(CENTER);
+      image(sprite, 0, 0, TAM_ITEM.jugador.w * 4, TAM_ITEM.jugador.h * 4);
+    } else {
+      noStroke();
+      fill(this.color);
+      ellipse(0, -8, 20, 20);         // cabeza
+      rectMode(CENTER);
+      rect(0, 8, 14, 22, 4);          // torso
+
+      // piernas animadas con frameCount (simula pasos)
+      let pasoPierna = sin(frameCount * 0.3) * 6;
+      fill(30);
+      rect(-4, 22 + pasoPierna, 5, 12, 2);
+      rect(4, 22 - pasoPierna, 5, 12, 2);
+    }
+
+    pop();
+  }
+}
+
+// ======================================================
+// CLASE Item: objeto para recolectar o trampa que resta puntos
+// ======================================================
+class Item {
+  constructor(probabilidadTrampa) {
+    this.x = random(30, ANCHO - 30);
+    this.y = random(30, ALTO - 30);
+    this.r = 14;
+    // La probabilidad de trampa se recibe como parámetro: sube con el
+    // tiempo de partida para que la dificultad aumente hacia el final.
+    this.esTrampa = random() < probabilidadTrampa;
+    this.tipo = this.esTrampa ? "gato" : random(TIPOS_OBJETO);
+  }
+
+  // Dibuja el ítem. Si el sprite correspondiente ya fue cargado en preload(),
+  // lo usa escalado a TAM_ITEM (x4 para que se vea nítido); si no, dibuja
+  // la forma simple como fallback para poder probar el juego sin sprites.
+  mostrar() {
+    push();
+    translate(this.x, this.y);
+    noStroke();
+
+    let sprite = this.obtenerSprite();
+    let tam = TAM_ITEM[this.esTrampa ? "gato" : this.tipo];
+
+    if (sprite) {
+      imageMode(CENTER);
+      image(sprite, 0, 0, tam.w * 4, tam.h * 4);
+    } else if (this.esTrampa) {
+      // Trampa: representada como un pequeño "gato" (triángulo + orejas)
+      fill(COLOR_TRAMPA);
+      triangle(-10, 8, 10, 8, 0, -10);
+      triangle(-8, -6, -3, -6, -6, -12);
+      triangle(8, -6, 3, -6, 6, -12);
+    } else if (this.tipo === "llave") {
+      fill(COLOR_ACENTO);
+      ellipse(-6, 0, 12, 12);
+      rect(0, -1, 14, 4);
+    } else if (this.tipo === "celular") {
+      fill(COLOR_ACENTO);
+      rectMode(CENTER);
+      rect(0, 0, 12, 20, 3);
+    } else if (this.tipo === "billetera") {
+      fill(COLOR_ACENTO);
+      rectMode(CENTER);
+      rect(0, 0, 20, 14, 2);
+    } else { // zapato
+      fill(COLOR_ACENTO);
+      rectMode(CENTER);
+      rect(0, 2, 20, 8, 4);
+      rect(6, -3, 8, 6, 2);
+    }
+    pop();
+  }
+
+  // Devuelve la imagen cargada que corresponde a este ítem, o undefined
+  // si todavía no se cargó ningún sprite (así se usa el fallback dibujado).
+  obtenerSprite() {
+    if (this.esTrampa) return imgGato;
+    if (this.tipo === "llave") return imgLlave;
+    if (this.tipo === "celular") return imgCelular;
+    if (this.tipo === "billetera") return imgBilletera;
+    if (this.tipo === "zapato") return imgZapato;
+    return undefined;
+  }
+}
+
+// Devuelve true si las coordenadas del mouse están dentro del rectángulo
+// de un botón. Se usa tanto para dibujar el hover como para detectar clicks.
+function mouseEncimaDe(boton) {
+  return mouseX > boton.x && mouseX < boton.x + boton.w &&
+         mouseY > boton.y && mouseY < boton.y + boton.h;
+}
+
+// Dibuja un botón rectangular con texto centrado, resaltado si el mouse
+// está encima (hover). Reutilizable para todos los botones clickeables.
+function dibujarBoton(boton, etiqueta) {
+  let sobreElBoton = mouseEncimaDe(boton);
+  rectMode(CORNER);
+  stroke(255);
+  strokeWeight(2);
+  fill(sobreElBoton ? COLOR_ALERTA : COLOR_ACENTO);
+  rect(boton.x, boton.y, boton.w, boton.h, 8);
+
+  noStroke();
+  fill(30);
+  textAlign(CENTER, CENTER);
+  textSize(18);
+  textFont('Kalam');
+  text(etiqueta, boton.x + boton.w / 2, boton.y + boton.h / 2 + 2);
+}
+
+function preload() {
+  // Google Font ya se carga via <link> en el head; p5 la toma como fuente web normal
+
+  // --- Carga de sprites (carpeta assets/img/) ---
+  // Cada loadImage tiene un callback de error: si el archivo todavía no
+  // existe, no rompe el sketch, solo deja la variable en null y el juego
+  // sigue usando la forma dibujada de respaldo.
+  imgJugador1 = loadImage('assets/img/jugador1.png', () => {}, () => { imgJugador1 = null; });
+  imgJugador2 = loadImage('assets/img/jugador2.png', () => {}, () => { imgJugador2 = null; });
+  imgLlave = loadImage('assets/img/llave.png', () => {}, () => { imgLlave = null; });
+  imgCelular = loadImage('assets/img/celular.png', () => {}, () => { imgCelular = null; });
+  imgBilletera = loadImage('assets/img/billetera.png', () => {}, () => { imgBilletera = null; });
+  imgZapato = loadImage('assets/img/zapato.png', () => {}, () => { imgZapato = null; });
+  imgGato = loadImage('assets/img/gato.png', () => {}, () => { imgGato = null; });
+
+  // --- Carga de sonidos (carpeta assets/audio/) ---
+  // Mismo criterio: si falta el archivo, queda en null y simplemente no
+  // suena nada en ese punto, sin romper el resto del juego.
+  sonidoRecolectar = loadSound('assets/audio/recolectar.mp3', () => {}, () => { sonidoRecolectar = null; });
+  sonidoTrampa = loadSound('assets/audio/trampa.mp3', () => {}, () => { sonidoTrampa = null; });
+  sonidoAlarma = loadSound('assets/audio/alarma.mp3', () => {}, () => { sonidoAlarma = null; });
+}
+
+function setup() {
+  createCanvas(ANCHO, ALTO);
+  textFont('Kalam');
+  reiniciarJuego();
+}
+
+function draw() {
+  background(COLOR_FONDO);
+
+  // El estado actual decide qué función de pantalla se ejecuta
+  if (gameState === "MENU") {
+    pantallaMenu();
+  } else if (gameState === "INSTRUCCIONES") {
+    pantallaInstrucciones();
+  } else if (gameState === "JUEGO") {
+    pantallaJuego();
+  } else if (gameState === "FIN") {
+    pantallaFin();
+  }
+}
+
+// ======================================================
+// PANTALLA 1: MENÚ - título y llamado a la acción
+// ======================================================
+function pantallaMenu() {
+  textAlign(CENTER, CENTER);
+
+  // Título con fuente tipo marcador para dar sensación de urgencia
+  textFont('Permanent Marker');
+  fill(COLOR_ACENTO);
+  textSize(52);
+  text("¡LLEGO TARDE!", ANCHO / 2, ALTO / 2 - 70);
+
+  textFont('Kalam');
+  fill(255);
+  textSize(20);
+  text("Juntá tus cosas antes de salir corriendo", ANCHO / 2, ALTO / 2);
+
+  // Parpadeo del texto de inicio para llamar la atención
+  if (frameCount % 60 < 40) {
+    fill(COLOR_ALERTA);
+    textSize(22);
+    text("Presioná ESPACIO o hacé click en JUGAR", ANCHO / 2, ALTO / 2 + 60);
+  }
+
+  // Botón clickeable (alternativa al teclado, cumple el requisito de
+  // interactividad por mouse además del control por teclado)
+  dibujarBoton(BOTON_MENU, "JUGAR");
+}
+
+// ======================================================
+// PANTALLA 2: INSTRUCCIONES - controles y reglas del juego
+// ======================================================
+function pantallaInstrucciones() {
+  textAlign(CENTER, CENTER);
+
+  textFont('Permanent Marker');
+  fill(COLOR_ACENTO);
+  textSize(30);
+  text("INSTRUCCIONES", ANCHO / 2, 55);
+
+  textFont('Kalam');
+  fill(255);
+  textSize(18);
+  text("Jugador 1 (amarillo): moverse con W A S D", ANCHO / 2, 140);
+  text("Jugador 2 (naranja): moverse con las flechas", ANCHO / 2, 170);
+  text("Tecla P o el ícono II: pausar la partida", ANCHO / 2, 195);
+
+  text("Llaves, celular, billetera y zapato: +1 punto", ANCHO / 2, 230);
+  fill(COLOR_TRAMPA);
+  text("El gato que se cruza: -1 punto", ANCHO / 2, 260);
+
+  fill(255);
+  text("Gana quien tenga más puntos cuando se acabe el tiempo", ANCHO / 2, 320);
+
+  // --- Créditos / autoría (pedido por la consigna en esta pantalla) ---
+  textSize(14);
+  fill(180);
+  text(AUTORIA, ANCHO / 2, 370);
+
+  fill(COLOR_ALERTA);
+  textSize(20);
+  text("Presioná ESPACIO o hacé click en JUGAR", ANCHO / 2, 415);
+
+  dibujarBoton(BOTON_INSTRUCCIONES, "JUGAR");
+}
+
+// ======================================================
+// PANTALLA 3: JUEGO - loop principal (timer, spawn, colisiones, HUD)
+// ======================================================
+function pantallaJuego() {
+  // --- Actualizar timer según tiempo real transcurrido, descontando pausas ---
+  let elapsed = (millis() - tiempoInicio - tiempoAcumuladoPausa) / 1000;
+  tiempoRestante = max(0, DURACION_PARTIDA - elapsed);
+
+  if (tiempoRestante <= 0) {
+    gameState = "FIN"; // se acabó el tiempo: pasa a pantalla de fin
+    return;
+  }
+
+  // --- Si está pausado, se dibuja todo "congelado" y no se actualiza nada ---
+  if (pausado) {
+    for (let it of items) it.mostrar();
+    jugador1.mostrar(imgJugador1);
+    jugador2.mostrar(imgJugador2);
+
+    noStroke();
+    fill(30, 30, 40, 190); // velo semitransparente oscuro sobre el juego
+    rect(0, 0, ANCHO, ALTO);
+
+    textAlign(CENTER, CENTER);
+    fill(255);
+    textFont('Permanent Marker');
+    textSize(36);
+    text("PAUSA", ANCHO / 2, ALTO / 2);
+
+    dibujarHUD();
+    dibujarBoton(BOTON_PAUSA, "▶");
+    return;
+  }
+
+  // --- Spawn de ítems nuevos cada cierta cantidad de frames ---
+  contadorSpawn++;
+  if (contadorSpawn >= intervaloSpawn && items.length < 8) {
+    // La probabilidad de trampa arranca en 30% y sube hasta 55% cerca
+    // del final de la partida, para que se ponga más difícil con el tiempo.
+    let progreso = 1 - (tiempoRestante / DURACION_PARTIDA); // 0 al inicio, 1 al final
+    let probabilidadTrampa = map(progreso, 0, 1, 0.3, 0.55);
+    items.push(new Item(probabilidadTrampa));
+    contadorSpawn = 0;
+  }
+
+  // --- Actualizar posición de los jugadores según teclado ---
+  jugador1.mover();
+  jugador2.mover();
+
+  // --- Detección de colisiones jugador-ítem (por distancia) ---
+  for (let i = items.length - 1; i >= 0; i--) {
+    let it = items[i];
+    if (dist(jugador1.x, jugador1.y, it.x, it.y) < jugador1.r + it.r) {
+      jugador1.puntos += it.esTrampa ? -1 : 1;
+      reproducirSonidoDeItem(it); // sonido según sea trampa o recolectable
+      items.splice(i, 1); // el ítem se recolecta y desaparece
+      continue;
+    }
+    if (dist(jugador2.x, jugador2.y, it.x, it.y) < jugador2.r + it.r) {
+      jugador2.puntos += it.esTrampa ? -1 : 1;
+      reproducirSonidoDeItem(it);
+      items.splice(i, 1);
+    }
+  }
+
+  // --- Dibujar ítems y jugadores en pantalla ---
+  for (let it of items) it.mostrar();
+  jugador1.mostrar(imgJugador1);
+  jugador2.mostrar(imgJugador2);
+
+  dibujarHUD();
+  dibujarBoton(BOTON_PAUSA, "II"); // ícono simple de pausa
+}
+
+// Dibuja el timer y los puntajes de ambos jugadores. Se separó en su
+// propia función porque se usa tanto en el gameplay normal como en la
+// pantalla congelada de pausa.
+function dibujarHUD() {
+  textFont('Permanent Marker');
+  textAlign(CENTER, TOP);
+  // el timer se pone rojo y "tiembla" cuando quedan pocos segundos
+  if (tiempoRestante < 10) {
+    fill(COLOR_TRAMPA);
+    textSize(30 + sin(frameCount * 0.5) * 2);
+  } else {
+    fill(255);
+    textSize(28);
+  }
+  text(nf(tiempoRestante, 1, 1) + "s", ANCHO / 2, 15);
+
+  textFont('Kalam');
+  textAlign(LEFT, TOP);
+  textSize(20);
+  fill(COLOR_J1);
+  text("J1: " + jugador1.puntos, 20, 15);
+
+  textAlign(RIGHT, TOP);
+  fill(COLOR_J2);
+  text("J2: " + jugador2.puntos, ANCHO - 20, 15);
+}
+
+// ======================================================
+// PANTALLA 4: FIN - resultado final y opción de reinicio
+// ======================================================
+function pantallaFin() {
+  textAlign(CENTER, CENTER);
+
+  textFont('Permanent Marker');
+  fill(COLOR_ACENTO);
+  textSize(38);
+
+  let resultado;
+  if (jugador1.puntos > jugador2.puntos) resultado = "¡Ganó Jugador 1!";
+  else if (jugador2.puntos > jugador1.puntos) resultado = "¡Ganó Jugador 2!";
+  else resultado = "¡Empate!";
+
+  text(resultado, ANCHO / 2, ALTO / 2 - 60);
+
+  textFont('Kalam');
+  fill(255);
+  textSize(22);
+  text("J1: " + jugador1.puntos + "   J2: " + jugador2.puntos, ANCHO / 2, ALTO / 2);
+
+  fill(COLOR_ALERTA);
+  textSize(18);
+  text("Presioná R o hacé click en REINICIAR", ANCHO / 2, ALTO / 2 + 60);
+
+  dibujarBoton(BOTON_REINICIAR, "REINICIAR");
+}
+
+// Reproduce el sonido correspondiente según el tipo de ítem tocado.
+// Se fija primero si el sonido fue cargado (evita error si preload
+// todavía no tiene los archivos de audio subidos).
+function reproducirSonidoDeItem(it) {
+  if (it.esTrampa) {
+    if (sonidoTrampa) sonidoTrampa.play();
+  } else {
+    if (sonidoRecolectar) sonidoRecolectar.play();
+  }
+}
+
+// ======================================================
+// Reinicia variables de partida (jugadores, ítems, timer)
+// ======================================================
+function reiniciarJuego() {
+  jugador1 = new Jugador(150, ALTO / 2, COLOR_J1, {
+    arriba: 87, abajo: 83, izquierda: 65, derecha: 68, // teclas W A S D
+  }, "J1");
+  jugador2 = new Jugador(ANCHO - 150, ALTO / 2, COLOR_J2, {
+    arriba: UP_ARROW, abajo: DOWN_ARROW, izquierda: LEFT_ARROW, derecha: RIGHT_ARROW,
+  }, "J2");
+  items = [];
+  contadorSpawn = 0;
+  tiempoRestante = DURACION_PARTIDA;
+}
+
+// ======================================================
+// Manejo de teclas para pasar de una pantalla a otra
+// ======================================================
+function keyPressed() {
+  if (key === " " && gameState === "MENU") {
+    gameState = "INSTRUCCIONES";
+  } else if (key === " " && gameState === "INSTRUCCIONES") {
+    iniciarPartida();
+  } else if ((key === "r" || key === "R") && gameState === "FIN") {
+    volverAlMenu();
+  } else if ((key === "p" || key === "P") && gameState === "JUEGO") {
+    alternarPausa();
+  }
+}
+
+// ======================================================
+// Eventos de mouse/touch: requisito de interactividad en tiempo real
+// (control de eventos por mouse, además del teclado)
+// ======================================================
+function mousePressed() {
+  if (gameState === "MENU" && mouseEncimaDe(BOTON_MENU)) {
+    gameState = "INSTRUCCIONES";
+  } else if (gameState === "INSTRUCCIONES" && mouseEncimaDe(BOTON_INSTRUCCIONES)) {
+    iniciarPartida();
+  } else if (gameState === "JUEGO" && mouseEncimaDe(BOTON_PAUSA)) {
+    alternarPausa();
+  } else if (gameState === "FIN" && mouseEncimaDe(BOTON_REINICIAR)) {
+    volverAlMenu();
+  }
+}
+
+// p5 también detecta toque en pantallas táctiles; reutilizamos la misma
+// lógica que mousePressed para que funcione igual en tablet/celular.
+function touchStarted() {
+  mousePressed();
+  return false; // evita el comportamiento por defecto del navegador (scroll/zoom)
+}
+
+// Arranca una partida nueva: reinicia variables, guarda el momento de
+// inicio y prende el loop de alarma de fondo.
+function iniciarPartida() {
+  reiniciarJuego();
+  tiempoInicio = millis(); // arranca a contar el tiempo real de la partida
+  tiempoAcumuladoPausa = 0;
+  pausado = false;
+  gameState = "JUEGO";
+  if (sonidoAlarma && !sonidoAlarma.isPlaying()) sonidoAlarma.loop();
+}
+
+// Vuelve al menú principal y corta la alarma de fondo.
+function volverAlMenu() {
+  gameState = "MENU";
+  if (sonidoAlarma && sonidoAlarma.isPlaying()) sonidoAlarma.stop();
+}
+
+// Activa o desactiva la pausa. Al des-pausar, suma el tiempo que estuvo
+// pausado a tiempoAcumuladoPausa para que el timer no salte hacia adelante.
+function alternarPausa() {
+  if (!pausado) {
+    pausado = true;
+    momentoInicioPausa = millis();
+    if (sonidoAlarma) sonidoAlarma.pause();
+  } else {
+    pausado = false;
+    tiempoAcumuladoPausa += millis() - momentoInicioPausa;
+    if (sonidoAlarma) sonidoAlarma.loop();
+  }
+}
+
+
+-->
+</body>
+</html>
