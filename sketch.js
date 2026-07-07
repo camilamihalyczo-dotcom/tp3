@@ -245,9 +245,17 @@ function dibujarBotonPausa(boton, etiqueta) {
 }
 
 function preload() {
-  // Se deja vacío para evitar que la página quede en "Loading..."
-  // si aún no existen los archivos de imagen o audio en assets/.
-  // El juego ya tiene dibujos de respaldo y funciona sin esos recursos.
+  sonidoRecolectar = loadSound('assets/audio/recolectar.mp3', () => {}, () => {
+    sonidoRecolectar = null;
+  });
+
+  sonidoTrampa = loadSound('assets/audio/trampa.mp3', () => {}, () => {
+    sonidoTrampa = null;
+  });
+
+  sonidoAlarma = loadSound('assets/audio/alarma.mp3', () => {}, () => {
+    sonidoAlarma = null;
+  });
 }
 
 function setup() {
@@ -341,6 +349,8 @@ function pantallaInstrucciones() {
 // PANTALLA 3: JUEGO - loop principal (timer, spawn, colisiones, HUD)
 // ======================================================
 function pantallaJuego() {
+  controlarAlarmaDeJuego();
+
   // --- Actualizar timer según tiempo real transcurrido, descontando pausas ---
   if (!pausado) {
     let elapsed = (millis() - tiempoInicio - tiempoAcumuladoPausa) / 1000;
@@ -348,6 +358,7 @@ function pantallaJuego() {
   }
 
   if (tiempoRestante <= 0) {
+    controlarAlarmaDeJuego();
     gameState = "FIN"; // se acabó el tiempo: pasa a pantalla de fin
     return;
   }
@@ -473,10 +484,33 @@ function pantallaFin() {
 // Se fija primero si el sonido fue cargado (evita error si preload
 // todavía no tiene los archivos de audio subidos).
 function reproducirSonidoDeItem(it) {
+  if (typeof userStartAudio === 'function') {
+    userStartAudio();
+  }
+
   if (it.esTrampa) {
-    if (sonidoTrampa) sonidoTrampa.play();
+    if (sonidoTrampa && sonidoTrampa.isLoaded && sonidoTrampa.isLoaded()) {
+      sonidoTrampa.play();
+    }
   } else {
-    if (sonidoRecolectar) sonidoRecolectar.play();
+    if (sonidoRecolectar && sonidoRecolectar.isLoaded && sonidoRecolectar.isLoaded()) {
+      sonidoRecolectar.play();
+    }
+  }
+}
+
+function controlarAlarmaDeJuego() {
+  if (!sonidoAlarma) return;
+
+  if (gameState !== "JUEGO" || tiempoRestante <= 0) {
+    if (sonidoAlarma.isPlaying()) sonidoAlarma.stop();
+    return;
+  }
+
+  if (pausado) {
+    if (sonidoAlarma.isPlaying()) sonidoAlarma.pause();
+  } else {
+    if (!sonidoAlarma.isPlaying()) sonidoAlarma.loop();
   }
 }
 
@@ -499,6 +533,10 @@ function reiniciarJuego() {
 // Manejo de teclas para pasar de una pantalla a otra
 // ======================================================
 function keyPressed() {
+  if (typeof userStartAudio === 'function') {
+    userStartAudio();
+  }
+
   if (key === " " && gameState === "MENU") {
     gameState = "INSTRUCCIONES";
   } else if (key === " " && gameState === "INSTRUCCIONES") {
@@ -515,6 +553,10 @@ function keyPressed() {
 // (control de eventos por mouse, además del teclado)
 // ======================================================
 function mousePressed() {
+  if (typeof userStartAudio === 'function') {
+    userStartAudio();
+  }
+
   if (gameState === "MENU" && mouseEncimaDe(BOTON_MENU)) {
     gameState = "INSTRUCCIONES";
   } else if (gameState === "INSTRUCCIONES" && mouseEncimaDe(BOTON_INSTRUCCIONES)) {
@@ -529,6 +571,10 @@ function mousePressed() {
 // p5 también detecta toque en pantallas táctiles; reutilizamos la misma
 // lógica que mousePressed para que funcione igual en tablet/celular.
 function touchStarted() {
+  if (typeof userStartAudio === 'function') {
+    userStartAudio();
+  }
+
   mousePressed();
   return false; // evita el comportamiento por defecto del navegador (scroll/zoom)
 }
@@ -541,7 +587,7 @@ function iniciarPartida() {
   tiempoAcumuladoPausa = 0;
   pausado = false;
   gameState = "JUEGO";
-  if (sonidoAlarma && !sonidoAlarma.isPlaying()) sonidoAlarma.loop();
+  controlarAlarmaDeJuego();
 }
 
 // Vuelve al menú principal y corta la alarma de fondo.
@@ -556,11 +602,11 @@ function alternarPausa() {
   if (!pausado) {
     pausado = true;
     momentoInicioPausa = millis();
-    if (sonidoAlarma) sonidoAlarma.pause();
+    controlarAlarmaDeJuego();
   } else {
     pausado = false;
     tiempoAcumuladoPausa += millis() - momentoInicioPausa;
-    if (sonidoAlarma) sonidoAlarma.loop();
+    controlarAlarmaDeJuego();
   }
 }
 
