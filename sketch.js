@@ -47,16 +47,16 @@ const FUENTE_TEXTO = "Nunito";
 // --- Botones clickeables (requisito de interactividad por mouse/touch) ---
 // Cada uno es un rectángulo {x, y, w, h}: alcanza para saber si el mouse
 // está encima (hover) y si el click cayó adentro.
-const BOTON_MENU_1J   = { x: ANCHO / 2 - 140, y: 300, w: 280, h: 54 };
-const BOTON_MENU_2J   = { x: ANCHO / 2 - 140, y: 366, w: 280, h: 54 };
-const BOTON_CREDITOS  = { x: ANCHO / 2 - 85,  y: 450, w: 170, h: 40 };
+const BOTON_MENU_1J = { x: ANCHO / 2 - 140, y: 300, w: 280, h: 54 };
+const BOTON_MENU_2J = { x: ANCHO / 2 - 140, y: 366, w: 280, h: 54 };
+const BOTON_CREDITOS = { x: ANCHO / 2 - 85, y: 450, w: 170, h: 40 };
 const BOTON_PESTANA_A = { x: ANCHO / 2 - 160, y: 140, w: 155, h: 42 }; // "CONTROLES"
-const BOTON_PESTANA_B = { x: ANCHO / 2 + 5,   y: 140, w: 155, h: 42 }; // "OBJETOS"
-const BOTON_JUGAR     = { x: ANCHO / 2 - 110, y: 590, w: 220, h: 54 };
-const BOTON_VOLVER    = { x: ANCHO / 2 - 110, y: 560, w: 220, h: 50 }; // en créditos y fin
-const BOTON_ATRAS     = { x: 20, y: 20, w: 100, h: 36 };               // esquina, vuelve al menú
-const BOTON_PAUSA     = { x: ANCHO - 56, y: ALTO - 46, w: 40, h: 34 };
-const BOTON_SONIDO    = { x: ANCHO - 104, y: ALTO - 46, w: 40, h: 34 };
+const BOTON_PESTANA_B = { x: ANCHO / 2 + 5, y: 140, w: 155, h: 42 }; // "OBJETOS"
+const BOTON_JUGAR = { x: ANCHO / 2 - 110, y: 590, w: 220, h: 54 };
+const BOTON_VOLVER = { x: ANCHO / 2 - 110, y: 560, w: 220, h: 50 }; // en créditos y fin
+const BOTON_ATRAS = { x: 20, y: 20, w: 100, h: 36 };               // esquina, vuelve al menú
+const BOTON_PAUSA = { x: ANCHO - 56, y: ALTO - 46, w: 40, h: 34 };
+const BOTON_SONIDO = { x: ANCHO - 104, y: ALTO - 46, w: 40, h: 34 };
 
 // --- Paleta ---
 const COLOR_FONDO = [43, 45, 66];        // se usa si todavía no está fondo.png
@@ -93,15 +93,15 @@ let imgPerro, imgGato;        // las dos mascotas que se mueven por la casa
 // Caja (ancho x alto) en la que entra el sprite de cada cosa. Está pensada
 // para que el dibujo coincida más o menos con su radio de colisión.
 const TAM_ITEM = {
-  llave:     { w: 40, h: 40 },
-  celular:   { w: 40, h: 40 },
+  llave: { w: 40, h: 40 },
+  celular: { w: 40, h: 40 },
   billetera: { w: 40, h: 40 },
-  zapato:    { w: 40, h: 40 },
-  tele:      { w: 46, h: 46 },
-  cafe:      { w: 40, h: 40 },
-  reloj:     { w: 40, h: 40 },
-  jugador:   { w: 56, h: 70 },
-  enemigo:   { w: 52, h: 52 },
+  zapato: { w: 40, h: 40 },
+  tele: { w: 46, h: 46 },
+  cafe: { w: 40, h: 40 },
+  reloj: { w: 40, h: 40 },
+  jugador: { w: 56, h: 70 },
+  enemigo: { w: 52, h: 52 },
 };
 
 // --- Sonidos: se cargan en setup() (carpeta assets/audio/) ---
@@ -172,9 +172,9 @@ class Jugador {
     this.velocidad = this.velocidadBase * this.multiplicadorVel;
 
     if (this.teclaPresionada(this.teclas.izquierda)) { this.x -= this.velocidad; this.mirandoDer = false; }
-    if (this.teclaPresionada(this.teclas.derecha))   { this.x += this.velocidad; this.mirandoDer = true; }
-    if (this.teclaPresionada(this.teclas.arriba))    this.y -= this.velocidad;
-    if (this.teclaPresionada(this.teclas.abajo))     this.y += this.velocidad;
+    if (this.teclaPresionada(this.teclas.derecha)) { this.x += this.velocidad; this.mirandoDer = true; }
+    if (this.teclaPresionada(this.teclas.arriba)) this.y -= this.velocidad;
+    if (this.teclaPresionada(this.teclas.abajo)) this.y += this.velocidad;
 
     this.x = constrain(this.x, this.r, ANCHO - this.r);
     this.y = constrain(this.y, this.r, ALTO - this.r);
@@ -474,7 +474,7 @@ function dibujarFondo(velo) {
 // Devuelve true si el mouse está dentro del rectángulo de un botón.
 function mouseEncimaDe(boton) {
   return mouseX > boton.x && mouseX < boton.x + boton.w &&
-         mouseY > boton.y && mouseY < boton.y + boton.h;
+    mouseY > boton.y && mouseY < boton.y + boton.h;
 }
 
 // Botón principal: relleno amarillo, se pone naranja al pasarle el mouse.
@@ -617,18 +617,18 @@ function cargarImagen(nombre, alCargar) {
 }
 
 function preload() {
-  cargarImagen('fondo.png',     img => imgFondo = img);
-  cargarImagen('jugador1.png',  img => imgJugador1 = img);
-  cargarImagen('jugador2.png',  img => imgJugador2 = img);
-  cargarImagen('llaves.png',    img => imgLlave = img);
-  cargarImagen('celular.png',   img => imgCelular = img);
+  cargarImagen('fondo.png', img => imgFondo = img);
+  //cargarImagen('jugador1.png',  img => imgJugador1 = img);
+  //cargarImagen('jugador2.png',  img => imgJugador2 = img);
+  cargarImagen('llaves.png', img => imgLlave = img);
+  cargarImagen('celular.png', img => imgCelular = img);
   cargarImagen('billetera.png', img => imgBilletera = img);
-  cargarImagen('zapato.png',    img => imgZapato = img);
-  cargarImagen('tele.png',      img => imgTele = img);
-  cargarImagen('cafe.png',      img => imgCafe = img);
-  cargarImagen('reloj.png',     img => imgReloj = img);
-  cargarImagen('perro.png',     img => imgPerro = img);
-  cargarImagen('gato.png',      img => imgGato = img);
+  cargarImagen('zapato.png', img => imgZapato = img);
+  cargarImagen('tele.png', img => imgTele = img);
+  cargarImagen('cafe.png', img => imgCafe = img);
+  cargarImagen('reloj.png', img => imgReloj = img);
+  cargarImagen('perro.png', img => imgPerro = img);
+  cargarImagen('gato.png', img => imgGato = img);
 }
 
 function setup() {
@@ -643,9 +643,9 @@ function setup() {
 // encuentra el archivo, p5 se queda esperándolo para siempre y el juego nunca
 // arranca. Así, si falta un mp3, se juega igual pero sin ese sonido.
 function cargarSonidos() {
-  sonidoRecolectar = loadSound('assets/audio/recolectar.mp3', () => {}, () => sonidoRecolectar = null);
-  sonidoTrampa     = loadSound('assets/audio/trampa.mp3',     () => {}, () => sonidoTrampa = null);
-  sonidoAlarma     = loadSound('assets/audio/alarma.mp3',     () => {}, () => sonidoAlarma = null);
+  sonidoRecolectar = loadSound('assets/audio/recolectar.mp3', () => { }, () => sonidoRecolectar = null);
+  sonidoTrampa = loadSound('assets/audio/trampa.mp3', () => { }, () => sonidoTrampa = null);
+  sonidoAlarma = loadSound('assets/audio/alarma.mp3', () => { }, () => sonidoAlarma = null);
 }
 
 // true solo si ese sonido terminó de cargar y se puede reproducir.
@@ -1285,10 +1285,10 @@ function reiniciarJuego() {
   if (gameMode === "1J") {
     // En 1 jugador andan las dos cosas: WASD o las flechas
     jugador1 = new Jugador(ANCHO / 2, ALTO / 2, COLOR_J1, {
-      arriba:    [87, UP_ARROW],
-      abajo:     [83, DOWN_ARROW],
+      arriba: [87, UP_ARROW],
+      abajo: [83, DOWN_ARROW],
       izquierda: [65, LEFT_ARROW],
-      derecha:   [68, RIGHT_ARROW],
+      derecha: [68, RIGHT_ARROW],
     }, "J1");
     jugador2 = null;
     objetivosRecolectados = new Set();
