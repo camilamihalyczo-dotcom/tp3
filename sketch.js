@@ -1,4 +1,3 @@
-
 // ======================================================
 // TP3 - Minijuego "A Contrarreloj"
 // Vibe: "llegando tarde de casa" - buscás tus cosas
@@ -47,16 +46,16 @@ const FUENTE_TEXTO = "Nunito";
 // --- Botones clickeables (requisito de interactividad por mouse/touch) ---
 // Cada uno es un rectángulo {x, y, w, h}: alcanza para saber si el mouse
 // está encima (hover) y si el click cayó adentro.
-const BOTON_MENU_1J = { x: ANCHO / 2 - 140, y: 300, w: 280, h: 54 };
-const BOTON_MENU_2J = { x: ANCHO / 2 - 140, y: 366, w: 280, h: 54 };
-const BOTON_CREDITOS = { x: ANCHO / 2 - 85, y: 450, w: 170, h: 40 };
+const BOTON_MENU_1J   = { x: ANCHO / 2 - 140, y: 300, w: 280, h: 54 };
+const BOTON_MENU_2J   = { x: ANCHO / 2 - 140, y: 366, w: 280, h: 54 };
+const BOTON_CREDITOS  = { x: ANCHO / 2 - 85,  y: 450, w: 170, h: 40 };
 const BOTON_PESTANA_A = { x: ANCHO / 2 - 160, y: 140, w: 155, h: 42 }; // "CONTROLES"
-const BOTON_PESTANA_B = { x: ANCHO / 2 + 5, y: 140, w: 155, h: 42 }; // "OBJETOS"
-const BOTON_JUGAR = { x: ANCHO / 2 - 110, y: 590, w: 220, h: 54 };
-const BOTON_VOLVER = { x: ANCHO / 2 - 110, y: 560, w: 220, h: 50 }; // en créditos y fin
-const BOTON_ATRAS = { x: 20, y: 20, w: 100, h: 36 };               // esquina, vuelve al menú
-const BOTON_PAUSA = { x: ANCHO - 56, y: ALTO - 46, w: 40, h: 34 };
-const BOTON_SONIDO = { x: ANCHO - 104, y: ALTO - 46, w: 40, h: 34 };
+const BOTON_PESTANA_B = { x: ANCHO / 2 + 5,   y: 140, w: 155, h: 42 }; // "OBJETOS"
+const BOTON_JUGAR     = { x: ANCHO / 2 - 110, y: 590, w: 220, h: 54 };
+const BOTON_VOLVER    = { x: ANCHO / 2 - 110, y: 560, w: 220, h: 50 }; // en créditos y fin
+const BOTON_ATRAS     = { x: 20, y: 20, w: 100, h: 36 };               // esquina, vuelve al menú
+const BOTON_PAUSA     = { x: ANCHO - 56, y: ALTO - 46, w: 40, h: 34 };
+const BOTON_SONIDO    = { x: ANCHO - 104, y: ALTO - 46, w: 40, h: 34 };
 
 // --- Paleta ---
 const COLOR_FONDO = [43, 45, 66];        // se usa si todavía no está fondo.png
@@ -93,15 +92,15 @@ let imgPerro, imgGato;        // las dos mascotas que se mueven por la casa
 // Caja (ancho x alto) en la que entra el sprite de cada cosa. Está pensada
 // para que el dibujo coincida más o menos con su radio de colisión.
 const TAM_ITEM = {
-  llave: { w: 40, h: 40 },
-  celular: { w: 40, h: 40 },
+  llave:     { w: 40, h: 40 },
+  celular:   { w: 40, h: 40 },
   billetera: { w: 40, h: 40 },
-  zapato: { w: 40, h: 40 },
-  tele: { w: 46, h: 46 },
-  cafe: { w: 40, h: 40 },
-  reloj: { w: 40, h: 40 },
-  jugador: { w: 56, h: 70 },
-  enemigo: { w: 52, h: 52 },
+  zapato:    { w: 40, h: 40 },
+  tele:      { w: 46, h: 46 },
+  cafe:      { w: 40, h: 40 },
+  reloj:     { w: 40, h: 40 },
+  jugador:   { w: 56, h: 70 },
+  enemigo:   { w: 52, h: 52 },
 };
 
 // --- Sonidos: se cargan en setup() (carpeta assets/audio/) ---
@@ -172,9 +171,9 @@ class Jugador {
     this.velocidad = this.velocidadBase * this.multiplicadorVel;
 
     if (this.teclaPresionada(this.teclas.izquierda)) { this.x -= this.velocidad; this.mirandoDer = false; }
-    if (this.teclaPresionada(this.teclas.derecha)) { this.x += this.velocidad; this.mirandoDer = true; }
-    if (this.teclaPresionada(this.teclas.arriba)) this.y -= this.velocidad;
-    if (this.teclaPresionada(this.teclas.abajo)) this.y += this.velocidad;
+    if (this.teclaPresionada(this.teclas.derecha))   { this.x += this.velocidad; this.mirandoDer = true; }
+    if (this.teclaPresionada(this.teclas.arriba))    this.y -= this.velocidad;
+    if (this.teclaPresionada(this.teclas.abajo))     this.y += this.velocidad;
 
     this.x = constrain(this.x, this.r, ANCHO - this.r);
     this.y = constrain(this.y, this.r, ALTO - this.r);
@@ -474,7 +473,7 @@ function dibujarFondo(velo) {
 // Devuelve true si el mouse está dentro del rectángulo de un botón.
 function mouseEncimaDe(boton) {
   return mouseX > boton.x && mouseX < boton.x + boton.w &&
-    mouseY > boton.y && mouseY < boton.y + boton.h;
+         mouseY > boton.y && mouseY < boton.y + boton.h;
 }
 
 // Botón principal: relleno amarillo, se pone naranja al pasarle el mouse.
@@ -617,18 +616,18 @@ function cargarImagen(nombre, alCargar) {
 }
 
 function preload() {
-  cargarImagen('fondo.png', img => imgFondo = img);
-  //cargarImagen('jugador1.png',  img => imgJugador1 = img);
-  //cargarImagen('jugador2.png',  img => imgJugador2 = img);
-  cargarImagen('llaves.png', img => imgLlave = img);
-  cargarImagen('celular.png', img => imgCelular = img);
+  cargarImagen('fondo.png',     img => imgFondo = img);
+  cargarImagen('jugador1.png',  img => imgJugador1 = img);
+  cargarImagen('jugador2.png',  img => imgJugador2 = img);
+  cargarImagen('llaves.png',    img => imgLlave = img);
+  cargarImagen('celular.png',   img => imgCelular = img);
   cargarImagen('billetera.png', img => imgBilletera = img);
-  cargarImagen('zapato.png', img => imgZapato = img);
-  cargarImagen('tele.png', img => imgTele = img);
-  cargarImagen('cafe.png', img => imgCafe = img);
-  cargarImagen('reloj.png', img => imgReloj = img);
-  cargarImagen('perro.png', img => imgPerro = img);
-  cargarImagen('gato.png', img => imgGato = img);
+  cargarImagen('zapato.png',    img => imgZapato = img);
+  cargarImagen('tele.png',      img => imgTele = img);
+  cargarImagen('cafe.png',      img => imgCafe = img);
+  cargarImagen('reloj.png',     img => imgReloj = img);
+  cargarImagen('perro.png',     img => imgPerro = img);
+  cargarImagen('gato.png',      img => imgGato = img);
 }
 
 function setup() {
@@ -643,9 +642,9 @@ function setup() {
 // encuentra el archivo, p5 se queda esperándolo para siempre y el juego nunca
 // arranca. Así, si falta un mp3, se juega igual pero sin ese sonido.
 function cargarSonidos() {
-  sonidoRecolectar = loadSound('assets/audio/recolectar.mp3', () => { }, () => sonidoRecolectar = null);
-  sonidoTrampa = loadSound('assets/audio/trampa.mp3', () => { }, () => sonidoTrampa = null);
-  sonidoAlarma = loadSound('assets/audio/alarma.mp3', () => { }, () => sonidoAlarma = null);
+  sonidoRecolectar = loadSound('assets/audio/recolectar.mp3', () => {}, () => sonidoRecolectar = null);
+  sonidoTrampa     = loadSound('assets/audio/trampa.mp3',     () => {}, () => sonidoTrampa = null);
+  sonidoAlarma     = loadSound('assets/audio/alarma.mp3',     () => {}, () => sonidoAlarma = null);
 }
 
 // true solo si ese sonido terminó de cargar y se puede reproducir.
@@ -693,6 +692,30 @@ function draw() {
     pantallaJuego();
   } else if (gameState === "FIN") {
     pantallaFin();
+  } else if (gameState === "MENU_PEPINO") {
+    pantallaMenuPepino();
+  } else if (gameState === "INSTRUCCIONES_PEPINO") {
+    pantallaInstruccionesPepino();
+  } else if (gameState === "MEMORIZAR_PEPINO") {
+    pantallaMemorizarPepino();
+  } else if (gameState === "JUEGO_PEPINO") {
+    pantallaJuegoPepino();
+  } else if (gameState === "CORTE_PEPINO") {
+    pantallaCortePepino();
+  } else if (gameState === "ESPERA_J2_PEPINO") {
+    pantallaEsperaJ2Pepino();
+  } else if (gameState === "RESULTADO_RONDA_PEPINO") {
+    pantallaResultadoRondaPepino();
+  } else if (gameState === "FIN_PEPINO") {
+    pantallaFinPepino();
+  } else if (gameState === "ELEGIR_ANIMAL") {
+    pantallaElegirAnimal();
+  } else if (gameState === "INSTRUCCIONES_PAJARO") {
+    pantallaInstruccionesPajaro();
+  } else if (gameState === "JUEGO_PAJARO") {
+    pantallaJuegoPajaro();
+  } else if (gameState === "FIN_PAJARO") {
+    pantallaFinPajaro();
   }
 }
 
@@ -1058,7 +1081,10 @@ function revisarObjetivoCompleto1J() {
     let mejorAnterior = mejorTiempo; // null si es el primer intento completado
     let esRecord = guardarMejorTiempoSiCorresponde(tiempoTranscurrido);
     resultado1J = { tiempoFinal: tiempoTranscurrido, esRecord: esRecord, completo: true, anterior: mejorAnterior };
-    gameState = "FIN";
+
+    // NUEVO FLUJO: al ganar el living, se habilita el siguiente nivel.
+    // El living no cambia; solamente cambia la pantalla a la que vamos después de ganar.
+    gameState = "MENU_PEPINO";
     controlarAlarmaDeJuego();
   }
 }
@@ -1285,10 +1311,10 @@ function reiniciarJuego() {
   if (gameMode === "1J") {
     // En 1 jugador andan las dos cosas: WASD o las flechas
     jugador1 = new Jugador(ANCHO / 2, ALTO / 2, COLOR_J1, {
-      arriba: [87, UP_ARROW],
-      abajo: [83, DOWN_ARROW],
+      arriba:    [87, UP_ARROW],
+      abajo:     [83, DOWN_ARROW],
       izquierda: [65, LEFT_ARROW],
-      derecha: [68, RIGHT_ARROW],
+      derecha:   [68, RIGHT_ARROW],
     }, "J1");
     jugador2 = null;
     objetivosRecolectados = new Set();
@@ -1325,8 +1351,11 @@ function keyPressed() {
 
   if (key === "m" || key === "M") {
     alternarSonido();
-  } else if (key === " " && gameState === "MENU") {
-    gameMode = "2J"; // ESPACIO elige 2 jugadores por defecto
+    return;
+  }
+
+  if (key === " " && gameState === "MENU") {
+    gameMode = "2J";
     irAInstrucciones();
   } else if (key === "1" && gameState === "MENU") {
     gameMode = "1J";
@@ -1337,6 +1366,25 @@ function keyPressed() {
     volverAlMenu();
   } else if ((key === "p" || key === "P") && gameState === "JUEGO") {
     alternarPausa();
+  } else if (key === " " && gameState === "MENU_PEPINO") {
+    gameState = "INSTRUCCIONES_PEPINO";
+  } else if (key === " " && gameState === "INSTRUCCIONES_PEPINO") {
+    iniciarCompetenciaPepino();
+  } else if (key === " " && gameState === "JUEGO_PEPINO") {
+    realizarCortePepino();
+  } else if (key === " " && gameState === "ESPERA_J2_PEPINO") {
+    prepararCuchilloPepino();
+    gameState = "JUEGO_PEPINO";
+  } else if (key === " " && gameState === "RESULTADO_RONDA_PEPINO") {
+    siguienteRondaPepino();
+  } else if ((key === "r" || key === "R") && gameState === "FIN_PEPINO") {
+    gameState = "ELEGIR_ANIMAL";
+  } else if (key === " " && gameState === "INSTRUCCIONES_PAJARO") {
+    iniciarJuegoPajaro();
+  } else if ((key === " " || keyCode === UP_ARROW) && gameState === "JUEGO_PAJARO") {
+    saltarAnimalPajaro();
+  } else if ((key === "r" || key === "R") && gameState === "FIN_PAJARO") {
+    iniciarJuegoPajaro();
   }
 }
 
@@ -1346,8 +1394,6 @@ function keyPressed() {
 function mousePressed() {
   if (typeof userStartAudio === 'function') userStartAudio();
 
-  // El botón del parlante está en las mismas coordenadas en casi todas las
-  // pantallas, así que se chequea primero y por separado.
   if (gameState !== "INSTRUCCIONES" && mouseEncimaDe(BOTON_SONIDO)) {
     alternarSonido();
     return;
@@ -1368,6 +1414,32 @@ function mousePressed() {
     if (mouseEncimaDe(BOTON_PAUSA)) alternarPausa();
   } else if (gameState === "FIN") {
     if (mouseEncimaDe(BOTON_VOLVER)) volverAlMenu();
+  } else if (gameState === "MENU_PEPINO") {
+    if (mouseEncimaDe(BOTON_CONTINUAR_PEPINO)) gameState = "INSTRUCCIONES_PEPINO";
+  } else if (gameState === "INSTRUCCIONES_PEPINO") {
+    if (mouseEncimaDe(BOTON_EMPEZAR_PEPINO)) iniciarCompetenciaPepino();
+    else if (mouseEncimaDe(BOTON_VOLVER_MENU_PEPINO)) gameState = "MENU_PEPINO";
+  } else if (gameState === "JUEGO_PEPINO") {
+    realizarCortePepino();
+  } else if (gameState === "ESPERA_J2_PEPINO") {
+    prepararCuchilloPepino();
+    gameState = "JUEGO_PEPINO";
+  } else if (gameState === "RESULTADO_RONDA_PEPINO") {
+    if (mouseEncimaDe(BOTON_SIGUIENTE_RONDA)) siguienteRondaPepino();
+  } else if (gameState === "FIN_PEPINO") {
+    if (mouseEncimaDe(BOTON_REINTENTAR_PEPINO)) gameState = "ELEGIR_ANIMAL";
+    else if (mouseEncimaDe(BOTON_MENU_FINAL_PEPINO)) volverAlMenu();
+  } else if (gameState === "ELEGIR_ANIMAL") {
+    if (mouseEncimaDe(BOTON_ELEGIR_GATO)) elegirAnimalPajaro("gato");
+    else if (mouseEncimaDe(BOTON_ELEGIR_PERRO)) elegirAnimalPajaro("perro");
+  } else if (gameState === "INSTRUCCIONES_PAJARO") {
+    if (mouseEncimaDe(BOTON_EMPEZAR_PAJARO)) iniciarJuegoPajaro();
+    else if (mouseEncimaDe(BOTON_ATRAS_ANIMAL)) gameState = "ELEGIR_ANIMAL";
+  } else if (gameState === "JUEGO_PAJARO") {
+    saltarAnimalPajaro();
+  } else if (gameState === "FIN_PAJARO") {
+    if (mouseEncimaDe(BOTON_REINTENTAR_PAJARO)) iniciarJuegoPajaro();
+    else if (mouseEncimaDe(BOTON_MENU_PAJARO)) volverAlMenu();
   }
 }
 
@@ -1414,4 +1486,1114 @@ function alternarPausa() {
     tiempoAcumuladoPausa += millis() - momentoInicioPausa;
   }
   controlarAlarmaDeJuego();
+}
+
+
+// ======================================================
+// NIVEL 2: MINIJUEGO DEL PEPINO - COMPETENCIA 2 JUGADORES
+// ======================================================
+// Se abre después de ganar el living en modo 1J.
+// Los dos jugadores compiten durante 5 rondas.
+// En cada ronda ven LA MISMA marca, corta J1, después J2,
+// y gana 1 punto quien quede más cerca del corte correcto.
+
+const TOTAL_RONDAS_PEPINO = 5;
+
+const BOTON_CONTINUAR_PEPINO   = { x: ANCHO / 2 - 130, y: 500, w: 260, h: 58 };
+const BOTON_EMPEZAR_PEPINO     = { x: ANCHO / 2 - 120, y: 565, w: 240, h: 54 };
+const BOTON_VOLVER_MENU_PEPINO = { x: 20, y: 20, w: 110, h: 36 };
+const BOTON_SIGUIENTE_RONDA    = { x: ANCHO / 2 - 130, y: 540, w: 260, h: 54 };
+const BOTON_REINTENTAR_PEPINO  = { x: ANCHO / 2 - 130, y: 520, w: 260, h: 54 };
+const BOTON_MENU_FINAL_PEPINO  = { x: ANCHO / 2 - 100, y: 590, w: 200, h: 42 };
+
+const PEPINO_Y = 395;
+const PEPINO_ANCHO = 390;
+const PEPINO_ALTO = 92;
+const PEPINO_X = ANCHO / 2;
+
+const DURACION_MARCA_PEPINO = 1800;
+const DURACION_ANIMACION_CORTE = 700;
+
+let rondaPepino = 1;
+let turnoPepino = 1;
+let puntosPepinoJ1 = 0;
+let puntosPepinoJ2 = 0;
+
+let diferenciaPepinoJ1 = null;
+let diferenciaPepinoJ2 = null;
+let cortePepinoJ1 = null;
+let cortePepinoJ2 = null;
+let ganadorRondaPepino = "";
+
+let pepinoLineaCorrectaX = PEPINO_X;
+let pepinoCuchilloX = PEPINO_X;
+let pepinoCuchilloY = 205;
+let pepinoDireccion = 1;
+let pepinoVelocidad = 5.2;
+let pepinoMomentoLinea = 0;
+let pepinoMomentoCorte = 0;
+let pepinoOffsetCuchillo = 0;
+let pepinoPosicionCorte = null;
+
+// ------------------------------------------------------
+// MENÚ DE TRANSICIÓN: aparece después de ganar el living
+// ------------------------------------------------------
+function pantallaMenuPepino() {
+  dibujarFondo(VELO_PANTALLAS);
+  dibujarPanel(80, 105, ANCHO - 160, 465);
+
+  dibujarTitulo("¡LIVING LISTO!", 155, 22, COLOR_BUENO);
+
+  textFont(FUENTE_TEXTO);
+  textAlign(CENTER, CENTER);
+
+  fill(235);
+  textStyle(BOLD);
+  textSize(20);
+  text("Encontraste todo a tiempo", ANCHO / 2, 215);
+  textStyle(NORMAL);
+
+  fill(COLOR_ACENTO);
+  textStyle(BOLD);
+  textSize(29);
+  text(nf(resultado1J.tiempoFinal, 1, 2) + "s", ANCHO / 2, 260);
+  textStyle(NORMAL);
+
+  fill(190);
+  textSize(16);
+  text("Ahora empieza la competencia de precisión", ANCHO / 2, 320);
+
+  fill(255);
+  textStyle(BOLD);
+  textSize(20);
+  text("JUGADOR 1  VS  JUGADOR 2", ANCHO / 2, 365);
+
+  fill(COLOR_BUENO);
+  textSize(18);
+  text("5 rondas · el corte más cercano gana", ANCHO / 2, 410);
+  textStyle(NORMAL);
+
+  dibujarBoton(BOTON_CONTINUAR_PEPINO, "IR AL PEPINO");
+  dibujarIconoSonido(BOTON_SONIDO);
+}
+
+// ------------------------------------------------------
+// INSTRUCCIONES
+// ------------------------------------------------------
+function pantallaInstruccionesPepino() {
+  dibujarFondoPepino();
+
+  rectMode(CORNER);
+  noStroke();
+  fill(24, 22, 36, 215);
+  rect(45, 55, ANCHO - 90, 525, 12);
+
+  dibujarTitulo("DUELO DE CORTE", 100, 19);
+
+  textFont(FUENTE_TEXTO);
+  textAlign(CENTER, CENTER);
+
+  fill(255);
+  textStyle(BOLD);
+  textSize(22);
+  text("5 RONDAS", ANCHO / 2, 155);
+  textStyle(NORMAL);
+
+  fill(220);
+  textSize(17);
+  text("1. Los dos jugadores miran la misma línea.", ANCHO / 2, 215);
+  text("2. La línea desaparece.", ANCHO / 2, 260);
+  text("3. J1 corta con CLICK / TOQUE / ESPACIO.", ANCHO / 2, 305);
+  text("4. Después corta J2 sin ver el resultado de J1.", ANCHO / 2, 350);
+  text("5. El corte más cercano gana 1 punto.", ANCHO / 2, 395);
+
+  fill(COLOR_ACENTO);
+  textStyle(BOLD);
+  textSize(18);
+  text("Después de 5 rondas gana quien tenga más puntos.", ANCHO / 2, 455);
+  textStyle(NORMAL);
+
+  dibujarBotonSecundario(BOTON_VOLVER_MENU_PEPINO, "‹ ATRÁS", false, 14);
+  dibujarBoton(BOTON_EMPEZAR_PEPINO, "EMPEZAR");
+  dibujarIconoSonido(BOTON_SONIDO);
+}
+
+// ------------------------------------------------------
+// INICIAR / REINICIAR TODA LA COMPETENCIA
+// ------------------------------------------------------
+function iniciarCompetenciaPepino() {
+  controlarAlarmaDeJuego();
+
+  rondaPepino = 1;
+  turnoPepino = 1;
+  puntosPepinoJ1 = 0;
+  puntosPepinoJ2 = 0;
+
+  iniciarRondaPepino();
+}
+
+// ------------------------------------------------------
+// PREPARAR UNA NUEVA RONDA
+// ------------------------------------------------------
+function iniciarRondaPepino() {
+  turnoPepino = 1;
+  diferenciaPepinoJ1 = null;
+  diferenciaPepinoJ2 = null;
+  cortePepinoJ1 = null;
+  cortePepinoJ2 = null;
+  ganadorRondaPepino = "";
+
+  // La marca cambia de lugar en cada ronda.
+  pepinoLineaCorrectaX = random(
+    PEPINO_X - PEPINO_ANCHO / 2 + 65,
+    PEPINO_X + PEPINO_ANCHO / 2 - 65
+  );
+
+  prepararCuchilloPepino();
+  pepinoMomentoLinea = millis();
+  gameState = "MEMORIZAR_PEPINO";
+}
+
+function prepararCuchilloPepino() {
+  pepinoCuchilloX = PEPINO_X - PEPINO_ANCHO / 2 + 35;
+  pepinoCuchilloY = 205;
+  pepinoDireccion = 1;
+  pepinoOffsetCuchillo = 0;
+  pepinoPosicionCorte = null;
+}
+
+// ------------------------------------------------------
+// FASE 1: LOS DOS MEMORIZAN LA MISMA MARCA
+// ------------------------------------------------------
+function pantallaMemorizarPepino() {
+  dibujarEscenaPepino(false);
+  dibujarHUDCompetenciaPepino();
+
+  dibujarTitulo("MEMORIZA LA LINEA", 92, 16, COLOR_TRAMPA);
+
+  push();
+  stroke(COLOR_TRAMPA);
+  strokeWeight(4);
+  drawingContext.setLineDash([10, 8]);
+  line(pepinoLineaCorrectaX, PEPINO_Y - 75, pepinoLineaCorrectaX, PEPINO_Y + 75);
+  drawingContext.setLineDash([]);
+  pop();
+
+  textFont(FUENTE_TEXTO);
+  textAlign(CENTER, CENTER);
+  fill(45);
+  textStyle(BOLD);
+  textSize(17);
+  text("Los dos jugadores tienen que recordar este lugar", ANCHO / 2, 590);
+  textStyle(NORMAL);
+
+  if (millis() - pepinoMomentoLinea >= DURACION_MARCA_PEPINO) {
+    prepararCuchilloPepino();
+    gameState = "JUEGO_PEPINO";
+  }
+}
+
+// ------------------------------------------------------
+// FASE 2: TURNO DE J1 O J2
+// ------------------------------------------------------
+function pantallaJuegoPepino() {
+  dibujarEscenaPepino(false);
+  dibujarHUDCompetenciaPepino();
+
+  textFont(FUENTE_TITULO);
+  textAlign(CENTER, CENTER);
+  textSize(18);
+  fill(turnoPepino === 1 ? COLOR_J1 : COLOR_J2);
+  text(turnoPepino === 1 ? "TURNO J1" : "TURNO J2", ANCHO / 2, 92);
+
+  let minX = PEPINO_X - PEPINO_ANCHO / 2 + 28;
+  let maxX = PEPINO_X + PEPINO_ANCHO / 2 - 28;
+
+  pepinoCuchilloX += pepinoVelocidad * pepinoDireccion;
+
+  if (pepinoCuchilloX >= maxX) {
+    pepinoCuchilloX = maxX;
+    pepinoDireccion = -1;
+  } else if (pepinoCuchilloX <= minX) {
+    pepinoCuchilloX = minX;
+    pepinoDireccion = 1;
+  }
+
+  dibujarCuchilloPepino(pepinoCuchilloX, pepinoCuchilloY);
+
+  textFont(FUENTE_TEXTO);
+  textAlign(CENTER, CENTER);
+  fill(45);
+  textStyle(BOLD);
+  textSize(17);
+  text("CLICK / TOQUE / ESPACIO PARA CORTAR", ANCHO / 2, 590);
+  textStyle(NORMAL);
+}
+
+function realizarCortePepino() {
+  if (gameState !== "JUEGO_PEPINO") return;
+
+  pepinoPosicionCorte = pepinoCuchilloX;
+  let diferencia = abs(pepinoPosicionCorte - pepinoLineaCorrectaX);
+
+  if (turnoPepino === 1) {
+    diferenciaPepinoJ1 = diferencia;
+    cortePepinoJ1 = pepinoPosicionCorte;
+  } else {
+    diferenciaPepinoJ2 = diferencia;
+    cortePepinoJ2 = pepinoPosicionCorte;
+  }
+
+  pepinoOffsetCuchillo = 0;
+  pepinoMomentoCorte = millis();
+  gameState = "CORTE_PEPINO";
+}
+
+// ------------------------------------------------------
+// ANIMACIÓN DEL CUCHILLO BAJANDO
+// ------------------------------------------------------
+function pantallaCortePepino() {
+  dibujarEscenaPepino(false);
+  dibujarHUDCompetenciaPepino();
+
+  pepinoOffsetCuchillo = min(145, pepinoOffsetCuchillo + 16);
+  dibujarCuchilloPepino(
+    pepinoPosicionCorte,
+    pepinoCuchilloY + pepinoOffsetCuchillo
+  );
+
+  if (pepinoOffsetCuchillo > 105) {
+    stroke(245, 245, 220);
+    strokeWeight(6);
+    line(
+      pepinoPosicionCorte,
+      PEPINO_Y - PEPINO_ALTO / 2,
+      pepinoPosicionCorte,
+      PEPINO_Y + PEPINO_ALTO / 2
+    );
+  }
+
+  if (millis() - pepinoMomentoCorte >= DURACION_ANIMACION_CORTE) {
+    if (turnoPepino === 1) {
+      // No revelamos la distancia de J1: J2 debe depender de su memoria.
+      turnoPepino = 2;
+      prepararCuchilloPepino();
+      gameState = "ESPERA_J2_PEPINO";
+    } else {
+      calcularGanadorRondaPepino();
+      gameState = "RESULTADO_RONDA_PEPINO";
+    }
+  }
+}
+
+// ------------------------------------------------------
+// PANTALLA ENTRE J1 Y J2
+// ------------------------------------------------------
+function pantallaEsperaJ2Pepino() {
+  dibujarEscenaPepino(false);
+  dibujarHUDCompetenciaPepino();
+
+  dibujarPanel(120, 190, ANCHO - 240, 265);
+
+  textFont(FUENTE_TITULO);
+  textAlign(CENTER, CENTER);
+  fill(COLOR_J2);
+  textSize(22);
+  text("TURNO J2", ANCHO / 2, 250);
+
+  textFont(FUENTE_TEXTO);
+  fill(235);
+  textStyle(BOLD);
+  textSize(18);
+  text("¿Recordás dónde estaba la línea?", ANCHO / 2, 320);
+  textStyle(NORMAL);
+
+  fill(190);
+  textSize(15);
+  text("Hacé click, tocá o apretá ESPACIO", ANCHO / 2, 375);
+}
+
+// ------------------------------------------------------
+// GANADOR DE CADA RONDA
+// ------------------------------------------------------
+function calcularGanadorRondaPepino() {
+  // Tolerancia mínima para considerar un empate real.
+  const TOLERANCIA_EMPATE = 0.5;
+
+  if (abs(diferenciaPepinoJ1 - diferenciaPepinoJ2) <= TOLERANCIA_EMPATE) {
+    ganadorRondaPepino = "EMPATE";
+  } else if (diferenciaPepinoJ1 < diferenciaPepinoJ2) {
+    puntosPepinoJ1++;
+    ganadorRondaPepino = "J1";
+  } else {
+    puntosPepinoJ2++;
+    ganadorRondaPepino = "J2";
+  }
+}
+
+function pantallaResultadoRondaPepino() {
+  dibujarEscenaPepino(false);
+  dibujarHUDCompetenciaPepino();
+
+  // Marca correcta
+  push();
+  stroke(COLOR_TRAMPA);
+  strokeWeight(3);
+  drawingContext.setLineDash([8, 8]);
+  line(pepinoLineaCorrectaX, PEPINO_Y - 70, pepinoLineaCorrectaX, PEPINO_Y + 70);
+  drawingContext.setLineDash([]);
+  pop();
+
+  // Corte J1
+  stroke(COLOR_J1);
+  strokeWeight(5);
+  line(cortePepinoJ1, PEPINO_Y - 55, cortePepinoJ1, PEPINO_Y + 55);
+
+  // Corte J2
+  stroke(COLOR_J2);
+  strokeWeight(5);
+  line(cortePepinoJ2, PEPINO_Y - 55, cortePepinoJ2, PEPINO_Y + 55);
+  noStroke();
+
+  dibujarPanel(105, 72, ANCHO - 210, 215);
+
+  textFont(FUENTE_TITULO);
+  textAlign(CENTER, CENTER);
+  textSize(19);
+
+  if (ganadorRondaPepino === "J1") {
+    fill(COLOR_J1);
+    text("¡PUNTO J1!", ANCHO / 2, 112);
+  } else if (ganadorRondaPepino === "J2") {
+    fill(COLOR_J2);
+    text("¡PUNTO J2!", ANCHO / 2, 112);
+  } else {
+    fill(255);
+    text("¡EMPATE!", ANCHO / 2, 112);
+  }
+
+  textFont(FUENTE_TEXTO);
+  textStyle(BOLD);
+  textSize(17);
+
+  fill(COLOR_J1);
+  text("J1: " + nf(diferenciaPepinoJ1, 1, 1) + " px", ANCHO / 2, 165);
+
+  fill(COLOR_J2);
+  text("J2: " + nf(diferenciaPepinoJ2, 1, 1) + " px", ANCHO / 2, 200);
+
+  textStyle(NORMAL);
+  fill(190);
+  textSize(13);
+  text("Menor distancia = mejor corte", ANCHO / 2, 247);
+
+  dibujarBoton(
+    BOTON_SIGUIENTE_RONDA,
+    rondaPepino < TOTAL_RONDAS_PEPINO ? "SIGUIENTE RONDA" : "VER GANADOR",
+    17
+  );
+}
+
+function siguienteRondaPepino() {
+  if (rondaPepino < TOTAL_RONDAS_PEPINO) {
+    rondaPepino++;
+    iniciarRondaPepino();
+  } else {
+    gameState = "FIN_PEPINO";
+  }
+}
+
+// ------------------------------------------------------
+// RESULTADO FINAL DESPUÉS DE LAS 5 RONDAS
+// ------------------------------------------------------
+function pantallaFinPepino() {
+  dibujarFondoPepino();
+  dibujarPanel(85, 90, ANCHO - 170, 455);
+
+  dibujarTitulo("RESULTADO FINAL", 145, 20);
+
+  textFont(FUENTE_TEXTO);
+  textAlign(CENTER, CENTER);
+  textStyle(BOLD);
+
+  fill(COLOR_J1);
+  textSize(24);
+  text("J1", ANCHO / 2 - 105, 230);
+
+  fill(COLOR_J2);
+  text("J2", ANCHO / 2 + 105, 230);
+
+  textSize(48);
+  fill(COLOR_J1);
+  text(puntosPepinoJ1, ANCHO / 2 - 105, 295);
+
+  fill(255);
+  text("-", ANCHO / 2, 295);
+
+  fill(COLOR_J2);
+  text(puntosPepinoJ2, ANCHO / 2 + 105, 295);
+
+  textStyle(NORMAL);
+
+  if (puntosPepinoJ1 > puntosPepinoJ2) {
+    dibujarTitulo("¡GANA J1!", 390, 25, COLOR_J1);
+  } else if (puntosPepinoJ2 > puntosPepinoJ1) {
+    dibujarTitulo("¡GANA J2!", 390, 25, COLOR_J2);
+  } else {
+    dibujarTitulo("¡EMPATE!", 390, 25, 255);
+  }
+
+  textFont(FUENTE_TEXTO);
+  textAlign(CENTER, CENTER);
+  fill(190);
+  textSize(15);
+  text("Resultado después de " + TOTAL_RONDAS_PEPINO + " rondas", ANCHO / 2, 445);
+
+  dibujarBoton(BOTON_REINTENTAR_PEPINO, "SIGUIENTE NIVEL");
+  dibujarBotonSecundario(BOTON_MENU_FINAL_PEPINO, "MENÚ PRINCIPAL", false, 14);
+  dibujarIconoSonido(BOTON_SONIDO);
+}
+
+// ------------------------------------------------------
+// HUD DEL DUELO
+// ------------------------------------------------------
+function dibujarHUDCompetenciaPepino() {
+  rectMode(CORNER);
+  noStroke();
+  fill(COLOR_BARRA);
+  rect(0, 0, ANCHO, 52);
+  rect(0, ALTO - 54, ANCHO, 54);
+
+  textFont(FUENTE_TEXTO);
+  textStyle(BOLD);
+  textSize(16);
+
+  textAlign(LEFT, CENTER);
+  fill(COLOR_J1);
+  text("J1  " + puntosPepinoJ1, 20, 26);
+
+  textAlign(CENTER, CENTER);
+  fill(255);
+  text("RONDA " + rondaPepino + " / " + TOTAL_RONDAS_PEPINO, ANCHO / 2, 26);
+
+  textAlign(RIGHT, CENTER);
+  fill(COLOR_J2);
+  text(puntosPepinoJ2 + "  J2", ANCHO - 20, 26);
+
+  textStyle(NORMAL);
+  dibujarIconoSonido(BOTON_SONIDO);
+}
+
+// ======================================================
+// DIBUJO DEL NIVEL DEL PEPINO
+// ======================================================
+function dibujarFondoPepino() {
+  background(226, 216, 197);
+
+  stroke(204, 195, 179, 135);
+  strokeWeight(2);
+  for (let x = 0; x <= ANCHO; x += 140) line(x, 0, x, ALTO);
+  for (let y = 0; y <= ALTO; y += 140) line(0, y, ANCHO, y);
+  noStroke();
+
+  dibujarMacetaPepino(82, 115, 0.9);
+  dibujarMacetaPepino(615, 545, 0.75);
+  dibujarPlatoPepino(590, 145);
+}
+
+function dibujarEscenaPepino(cortado) {
+  dibujarFondoPepino();
+
+  noStroke();
+  fill(85, 54, 45, 65);
+  ellipse(ANCHO / 2 + 8, 398, 590, 430);
+
+  fill(162, 107, 70);
+  ellipse(ANCHO / 2, 386, 580, 420);
+
+  stroke(125, 77, 50, 95);
+  strokeWeight(2);
+  noFill();
+  arc(ANCHO / 2, 380, 500, 330, 0.25, 2.8);
+  arc(ANCHO / 2, 395, 430, 280, 3.35, 5.9);
+  line(120, 410, 575, 410);
+  noStroke();
+
+  rectMode(CENTER);
+  fill(75, 45, 36, 55);
+  rect(ANCHO / 2 + 8, 410, 500, 225, 30);
+
+  fill(207, 151, 96);
+  rect(ANCHO / 2, 400, 500, 225, 30);
+
+  stroke(171, 111, 68, 105);
+  strokeWeight(2);
+  line(135, 350, 565, 350);
+  line(135, 420, 565, 420);
+  line(185, 312, 185, 488);
+  noStroke();
+
+  dibujarPepinoEntero();
+}
+
+function dibujarPepinoEntero() {
+  rectMode(CENTER);
+  noStroke();
+
+  fill(25, 65, 35, 55);
+  rect(PEPINO_X + 5, PEPINO_Y + 8, PEPINO_ANCHO, PEPINO_ALTO, 48);
+
+  fill(75, 160, 78);
+  rect(PEPINO_X, PEPINO_Y, PEPINO_ANCHO, PEPINO_ALTO, 48);
+
+  noFill();
+  stroke(38, 105, 53);
+  strokeWeight(6);
+  rect(PEPINO_X, PEPINO_Y, PEPINO_ANCHO, PEPINO_ALTO, 48);
+  noStroke();
+
+  fill(122, 190, 95, 125);
+  for (
+    let x = PEPINO_X - PEPINO_ANCHO / 2 + 42;
+    x < PEPINO_X + PEPINO_ANCHO / 2 - 20;
+    x += 52
+  ) {
+    ellipse(x, PEPINO_Y - 17, 14, 8);
+    ellipse(x + 20, PEPINO_Y + 17, 11, 7);
+  }
+
+  fill(45, 120, 58, 110);
+  let iPunto = 0;
+  for (let x = PEPINO_X - 150; x <= PEPINO_X + 150; x += 60) {
+    let desplazamientoY = [-18, 12, -5, 20, -14, 7][iPunto % 6];
+    ellipse(x, PEPINO_Y + desplazamientoY, 5, 5);
+    iPunto++;
+  }
+}
+
+function dibujarCuchilloPepino(x, y) {
+  push();
+  translate(x, y);
+
+  rectMode(CENTER);
+  noStroke();
+
+  fill(0, 0, 0, 55);
+  rect(6, 7, 29, 155, 6);
+
+  fill(208, 213, 218);
+  rect(0, 20, 25, 108, 4);
+
+  fill(242, 244, 245);
+  triangle(-12.5, 74, 12.5, 74, 12.5, 28);
+
+  fill(70, 47, 40);
+  rect(0, -57, 34, 56, 8);
+
+  fill(131, 88, 59);
+  ellipse(0, -68, 6, 6);
+  ellipse(0, -48, 6, 6);
+
+  pop();
+}
+
+function dibujarMacetaPepino(x, y, escala) {
+  push();
+  translate(x, y);
+  scale(escala);
+
+  noStroke();
+  fill(117, 76, 51);
+  ellipse(0, 27, 55, 28);
+
+  fill(151, 94, 60);
+  rectMode(CENTER);
+  rect(0, 12, 45, 38, 8);
+
+  fill(57, 110, 65);
+  ellipse(-12, -14, 20, 55);
+  ellipse(10, -18, 18, 60);
+  ellipse(0, -28, 18, 55);
+
+  pop();
+}
+
+function dibujarPlatoPepino(x, y) {
+  noStroke();
+
+  fill(235, 230, 219);
+  ellipse(x, y, 94, 94);
+
+  fill(202, 196, 183);
+  ellipse(x, y, 69, 69);
+
+  fill(226, 221, 210);
+  ellipse(x, y, 58, 58);
+}
+
+
+// ======================================================
+// NIVEL 3: ATRAPAR AL PAJARO
+// ======================================================
+// ======================================================
+// NIVEL 3: ATRAPAR PAJAROS
+// ======================================================
+
+const BOTON_ELEGIR_GATO = { x: 95, y: 430, w: 220, h: 62 };
+const BOTON_ELEGIR_PERRO = { x: 385, y: 430, w: 220, h: 62 };
+const BOTON_EMPEZAR_PAJARO = { x: ANCHO / 2 - 120, y: 565, w: 240, h: 54 };
+const BOTON_ATRAS_ANIMAL = { x: 20, y: 20, w: 120, h: 38 };
+const BOTON_REINTENTAR_PAJARO = { x: ANCHO / 2 - 130, y: 520, w: 260, h: 54 };
+const BOTON_MENU_PAJARO = { x: ANCHO / 2 - 105, y: 590, w: 210, h: 42 };
+
+const CANTIDAD_PAJAROS_EN_PANTALLA = 3;
+const PAJAROS_PARA_GANAR = 8;
+const TIEMPO_MAX_PAJAROS = 70;
+
+let animalElegido = "";
+let animalPajaroX = 150;
+let animalPajaroY = 0;
+let animalPajaroVelY = 0;
+let animalPajaroEnSuelo = true;
+let animalPajaroFuerzaSalto = 13;
+let animalPajaroVelHorizontal = 5;
+let sueloPajaroY = 555;
+
+let pajaros = [];
+let pajarosAtrapados = 0;
+let obstaculosPajaro = [];
+let ultimoObstaculoPajaro = 0;
+let intervaloObstaculoPajaro = 1800;
+let velocidadEscenaPajaro = 5.2;
+let invulnerablePajaroHasta = 0;
+let tiempoInicioPajaro = 0;
+let tiempoJuegoPajaro = 0;
+let mensajeFinPajaro = "";
+
+function pantallaElegirAnimal() {
+  dibujarFondoComedorPajaro();
+  dibujarPanel(70, 80, ANCHO - 140, 470);
+  dibujarTitulo("¿QUIEN VA?", 130, 22);
+
+  textFont(FUENTE_TEXTO);
+  textAlign(CENTER, CENTER);
+  fill(235);
+  textStyle(BOLD);
+  textSize(23);
+  text("¡Entró una bandada al comedor!", ANCHO / 2, 195);
+  textStyle(NORMAL);
+  fill(190);
+  textSize(17);
+  text("Elegí quién va a perseguir los pájaros", ANCHO / 2, 235);
+
+  dibujarAnimalSeleccion("gato", 205, 335, 1.35);
+  dibujarAnimalSeleccion("perro", 495, 335, 1.35);
+
+  fill(COLOR_J1);
+  textStyle(BOLD);
+  textSize(20);
+  text("GATO", 205, 390);
+  fill(COLOR_J2);
+  text("PERRO", 495, 390);
+  textStyle(NORMAL);
+
+  dibujarBoton(BOTON_ELEGIR_GATO, "ELEGIR GATO", 17);
+  dibujarBoton(BOTON_ELEGIR_PERRO, "ELEGIR PERRO", 17);
+}
+
+function elegirAnimalPajaro(tipo) {
+  animalElegido = tipo;
+
+  if (animalElegido === "gato") {
+    animalPajaroFuerzaSalto = 15;
+    animalPajaroVelHorizontal = 5.3;
+  } else {
+    animalPajaroFuerzaSalto = 14;
+    animalPajaroVelHorizontal = 5.7;
+  }
+
+  gameState = "INSTRUCCIONES_PAJARO";
+}
+
+function pantallaInstruccionesPajaro() {
+  dibujarFondoComedorPajaro();
+  dibujarPanel(55, 55, ANCHO - 110, 520);
+  dibujarTitulo("ATRAPA PAJAROS", 105, 18);
+
+  dibujarAnimalSeleccion(animalElegido, ANCHO / 2, 175, 1.2);
+
+  textFont(FUENTE_TEXTO);
+  textAlign(CENTER, CENTER);
+  fill(235);
+  textSize(17);
+  text("Hay varios pájaros moviéndose de forma impredecible.", ANCHO / 2, 245);
+  text("Movete con A/D o las flechas.", ANCHO / 2, 290);
+  text("Saltá con ESPACIO, flecha ARRIBA, click o toque.", ANCHO / 2, 335);
+  text("Cada pájaro atrapado suma 1.", ANCHO / 2, 380);
+
+  fill(COLOR_ACENTO);
+  textStyle(BOLD);
+  textSize(18);
+  text("Atrapá " + PAJAROS_PARA_GANAR + " antes de que termine el tiempo.", ANCHO / 2, 445);
+  textStyle(NORMAL);
+
+  dibujarBotonSecundario(BOTON_ATRAS_ANIMAL, "‹ ATRÁS", false, 14);
+  dibujarBoton(BOTON_EMPEZAR_PAJARO, "EMPEZAR");
+}
+
+function iniciarJuegoPajaro() {
+  animalPajaroX = 150;
+  animalPajaroY = sueloPajaroY;
+  animalPajaroVelY = 0;
+  animalPajaroEnSuelo = true;
+  pajaros = [];
+  pajarosAtrapados = 0;
+  obstaculosPajaro = [];
+  ultimoObstaculoPajaro = millis();
+  intervaloObstaculoPajaro = 1800;
+  invulnerablePajaroHasta = 0;
+  tiempoInicioPajaro = millis();
+  tiempoJuegoPajaro = 0;
+  mensajeFinPajaro = "";
+
+  for (let i = 0; i < CANTIDAD_PAJAROS_EN_PANTALLA; i++) {
+    crearPajaroLoco(i);
+  }
+
+  gameState = "JUEGO_PAJARO";
+}
+
+function crearPajaroLoco(indice) {
+  pajaros.push({
+    x: random(390, 650) + indice * 18,
+    y: random(285, 455),
+    vx: random(-2.8, 2.8),
+    vy: random(-2.2, 2.2),
+    faseX: random(TWO_PI),
+    faseY: random(TWO_PI),
+    rapidezX: random(0.035, 0.075),
+    rapidezY: random(0.045, 0.095),
+    amplitudX: random(18, 55),
+    amplitudY: random(18, 60),
+    proximoCambio: millis() + random(450, 1200),
+    escala: random(0.82, 1.12),
+    colorVariante: floor(random(3))
+  });
+}
+
+function pantallaJuegoPajaro() {
+  dibujarFondoComedorPajaro();
+  actualizarJuegoPajaro();
+  dibujarObstaculosPajaro();
+  dibujarPajarosLocos();
+  dibujarAnimalPajaro();
+  dibujarHUDPajaro();
+}
+
+function actualizarJuegoPajaro() {
+  tiempoJuegoPajaro = (millis() - tiempoInicioPajaro) / 1000;
+
+  if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) animalPajaroX -= animalPajaroVelHorizontal;
+  if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) animalPajaroX += animalPajaroVelHorizontal;
+  animalPajaroX = constrain(animalPajaroX, 70, 470);
+
+  animalPajaroVelY += 0.72;
+  animalPajaroY += animalPajaroVelY;
+  if (animalPajaroY >= sueloPajaroY) {
+    animalPajaroY = sueloPajaroY;
+    animalPajaroVelY = 0;
+    animalPajaroEnSuelo = true;
+  }
+
+  actualizarPajarosLocos();
+
+  if (millis() - ultimoObstaculoPajaro > intervaloObstaculoPajaro) {
+    crearObstaculoPajaro();
+    ultimoObstaculoPajaro = millis();
+    intervaloObstaculoPajaro = random(1650, 2300);
+  }
+
+  for (let i = obstaculosPajaro.length - 1; i >= 0; i--) {
+    let o = obstaculosPajaro[i];
+    o.x -= velocidadEscenaPajaro;
+
+    if (colisionAnimalObstaculo(o) && millis() > invulnerablePajaroHasta) {
+      invulnerablePajaroHasta = millis() + 900;
+      animalPajaroX = max(70, animalPajaroX - 24);
+      if (sonidoListo(sonidoTrampa) && sonidoActivado) sonidoTrampa.play();
+    }
+
+    if (o.x + o.w < -20) obstaculosPajaro.splice(i, 1);
+  }
+
+  revisarCapturaPajaros();
+
+  if (pajarosAtrapados >= PAJAROS_PARA_GANAR) {
+    mensajeFinPajaro = "¡ATRAPASTE " + pajarosAtrapados + " PAJAROS!";
+    gameState = "FIN_PAJARO";
+    return;
+  }
+
+  if (tiempoJuegoPajaro >= TIEMPO_MAX_PAJAROS) {
+    mensajeFinPajaro = "ATRAPASTE " + pajarosAtrapados + " PAJAROS";
+    gameState = "FIN_PAJARO";
+  }
+}
+
+function actualizarPajarosLocos() {
+  for (let p of pajaros) {
+    p.faseX += p.rapidezX;
+    p.faseY += p.rapidezY;
+
+    if (millis() > p.proximoCambio) {
+      p.vx = random(-3.6, 3.6);
+      p.vy = random(-3.0, 3.0);
+      p.rapidezX = random(0.035, 0.09);
+      p.rapidezY = random(0.045, 0.11);
+      p.proximoCambio = millis() + random(400, 1050);
+    }
+
+    p.x += p.vx + sin(p.faseX) * 1.8;
+    p.y += p.vy + cos(p.faseY) * 1.6;
+
+    if (p.x < 320) { p.x = 320; p.vx = abs(p.vx) + 0.8; }
+    if (p.x > ANCHO - 28) { p.x = ANCHO - 28; p.vx = -abs(p.vx) - 0.8; }
+    if (p.y < 250) { p.y = 250; p.vy = abs(p.vy) + 0.6; }
+    if (p.y > 500) { p.y = 500; p.vy = -abs(p.vy) - 0.6; }
+  }
+}
+
+function revisarCapturaPajaros() {
+  let cabezaX = animalPajaroX;
+  let cabezaY = animalPajaroY - 38;
+
+  for (let i = pajaros.length - 1; i >= 0; i--) {
+    let p = pajaros[i];
+    let d = dist(cabezaX, cabezaY, p.x, p.y);
+
+    if (d < 58) {
+      pajaros.splice(i, 1);
+      pajarosAtrapados++;
+
+      if (sonidoListo(sonidoRecolectar) && sonidoActivado) sonidoRecolectar.play();
+
+      if (pajarosAtrapados < PAJAROS_PARA_GANAR) {
+        crearPajaroLoco(i);
+      }
+    }
+  }
+}
+
+function saltarAnimalPajaro() {
+  if (gameState !== "JUEGO_PAJARO") return;
+  if (animalPajaroEnSuelo) {
+    animalPajaroVelY = -animalPajaroFuerzaSalto;
+    animalPajaroEnSuelo = false;
+  }
+}
+
+function crearObstaculoPajaro() {
+  let tipo = random(["silla", "caja", "planta"]);
+  let w;
+  let h;
+
+  if (tipo === "silla") {
+    w = 42;
+    h = 65;
+  } else if (tipo === "caja") {
+    w = 42;
+    h = 38;
+  } else {
+    w = 36;
+    h = 55;
+  }
+
+  obstaculosPajaro.push({
+    x: ANCHO + 30,
+    y: sueloPajaroY - h + 18,
+    w: w,
+    h: h,
+    tipo: tipo
+  });
+}
+
+function colisionAnimalObstaculo(o) {
+  let ax = animalPajaroX - 20;
+  let ay = animalPajaroY - 50;
+  let aw = 40;
+  let ah = 48;
+
+  return ax < o.x + o.w && ax + aw > o.x && ay < o.y + o.h && ay + ah > o.y;
+}
+
+function dibujarFondoComedorPajaro() {
+  background(221, 210, 190);
+  noStroke();
+  fill(224, 214, 197);
+  rectMode(CORNER);
+  rect(0, 0, ANCHO, 430);
+
+  fill(159, 111, 77);
+  rect(85, 105, 120, 85, 8);
+  fill(232, 222, 202);
+  rect(95, 115, 100, 65, 4);
+  fill(105, 143, 91);
+  ellipse(145, 148, 40, 28);
+
+  fill(104, 81, 66);
+  rect(445, 75, 175, 165, 8);
+  fill(173, 210, 220);
+  rect(457, 87, 151, 141, 3);
+  stroke(104, 81, 66);
+  strokeWeight(5);
+  line(532, 87, 532, 228);
+  line(457, 157, 608, 157);
+  noStroke();
+
+  fill(166, 116, 78);
+  rect(0, 430, ANCHO, 270);
+  stroke(128, 83, 57, 90);
+  strokeWeight(2);
+  for (let y = 450; y < ALTO; y += 42) line(0, y, ANCHO, y);
+  for (let x = 0; x < ANCHO; x += 120) line(x, 430, x - 80, ALTO);
+  noStroke();
+
+  fill(92, 62, 50, 70);
+  rect(0, sueloPajaroY + 18, ANCHO, 8);
+}
+
+function dibujarAnimalSeleccion(tipo, x, y, escala) {
+  push();
+  translate(x, y);
+  scale(escala);
+  let sprite = tipo === "gato" ? imgGato : imgPerro;
+  if (sprite) dibujarSprite(sprite, 70, 70);
+  else dibujarFormaDe(tipo);
+  pop();
+}
+
+function dibujarAnimalPajaro() {
+  push();
+  translate(animalPajaroX, animalPajaroY - 30);
+  let sprite = animalElegido === "gato" ? imgGato : imgPerro;
+  if (millis() < invulnerablePajaroHasta && frameCount % 8 < 4) tint(255, 110);
+  if (sprite) dibujarSprite(sprite, animalElegido === "gato" ? 64 : 72, animalElegido === "gato" ? 64 : 72);
+  else dibujarFormaDe(animalElegido);
+  noTint();
+  pop();
+}
+
+function dibujarPajarosLocos() {
+  for (let p of pajaros) dibujarPajaroIndividual(p);
+}
+
+function dibujarPajaroIndividual(p) {
+  push();
+  translate(p.x, p.y);
+  scale(p.escala);
+  noStroke();
+
+  let aleteo = sin(frameCount * 0.55 + p.faseY) * 11;
+  if (p.colorVariante === 0) fill(74, 117, 170);
+  else if (p.colorVariante === 1) fill(110, 145, 85);
+  else fill(145, 105, 155);
+
+  ellipse(0, 0, 36, 24);
+  ellipse(-14, -4 - aleteo * 0.28, 24, 11);
+  ellipse(12, -4 + aleteo * 0.28, 24, 11);
+  fill(244, 181, 62);
+  triangle(17, -2, 28, 3, 17, 7);
+  fill(20);
+  ellipse(7, -5, 3.5, 3.5);
+  pop();
+}
+
+function dibujarObstaculosPajaro() {
+  for (let o of obstaculosPajaro) {
+    push();
+    translate(o.x, o.y);
+    rectMode(CORNER);
+    noStroke();
+
+    if (o.tipo === "silla") {
+      fill(111, 73, 52);
+      rect(5, 12, o.w - 10, 12, 4);
+      rect(5, 0, 8, o.h, 3);
+      rect(o.w - 13, 20, 8, o.h - 20, 3);
+    } else if (o.tipo === "caja") {
+      fill(178, 132, 82);
+      rect(0, 0, o.w, o.h, 5);
+      stroke(124, 88, 58);
+      strokeWeight(2);
+      line(o.w / 2, 0, o.w / 2, o.h);
+      line(0, o.h / 2, o.w, o.h / 2);
+      noStroke();
+    } else {
+      fill(124, 76, 51);
+      rect(5, o.h * 0.55, o.w - 10, o.h * 0.45, 7);
+      fill(65, 124, 72);
+      ellipse(o.w * 0.28, o.h * 0.4, o.w * 0.45, o.h * 0.7);
+      ellipse(o.w * 0.7, o.h * 0.34, o.w * 0.42, o.h * 0.78);
+    }
+    pop();
+  }
+}
+
+function dibujarHUDPajaro() {
+  rectMode(CORNER);
+  noStroke();
+  fill(COLOR_BARRA);
+  rect(0, 0, ANCHO, 62);
+  rect(0, ALTO - 54, ANCHO, 54);
+
+  textFont(FUENTE_TEXTO);
+  textStyle(BOLD);
+  textSize(16);
+
+  textAlign(LEFT, CENTER);
+  fill(animalElegido === "gato" ? COLOR_J1 : COLOR_J2);
+  text(animalElegido === "gato" ? "GATO" : "PERRO", 18, 20);
+
+  fill(COLOR_BUENO);
+  text("Pájaros: " + pajarosAtrapados + " / " + PAJAROS_PARA_GANAR, 18, 44);
+
+  textAlign(RIGHT, CENTER);
+  fill(235);
+  text("Tiempo: " + nf(max(0, TIEMPO_MAX_PAJAROS - tiempoJuegoPajaro), 1, 1), ANCHO - 18, 30);
+
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(12);
+  text("¡SE MUEVEN PARA TODOS LADOS! SALTA Y ATRAPALOS", ANCHO / 2, ALTO - 27);
+  textStyle(NORMAL);
+}
+
+function pantallaFinPajaro() {
+  dibujarFondoComedorPajaro();
+  dibujarPanel(85, 110, ANCHO - 170, 420);
+
+  let gano = pajarosAtrapados >= PAJAROS_PARA_GANAR;
+  dibujarTitulo(gano ? "¡BANDADA ATRAPADA!" : "¡SE ACABO!", 170, 19, gano ? COLOR_BUENO : COLOR_TRAMPA);
+
+  dibujarAnimalSeleccion(animalElegido, ANCHO / 2 - 70, 275, 1.1);
+  push();
+  translate(ANCHO / 2 + 70, 275);
+  dibujarPajaroIndividual({
+    x: 0, y: 0, escala: 1.15, faseY: 0, colorVariante: 0
+  });
+  pop();
+
+  textFont(FUENTE_TEXTO);
+  textAlign(CENTER, CENTER);
+  fill(235);
+  textStyle(BOLD);
+  textSize(21);
+  text("ATRAPASTE " + pajarosAtrapados + " PAJAROS", ANCHO / 2, 355);
+  textStyle(NORMAL);
+  fill(190);
+  textSize(15);
+  text("Tiempo: " + nf(tiempoJuegoPajaro, 1, 1) + " s", ANCHO / 2, 400);
+
+  dibujarBoton(BOTON_REINTENTAR_PAJARO, "JUGAR DE NUEVO");
+  dibujarBotonSecundario(BOTON_MENU_PAJARO, "MENÚ PRINCIPAL", false, 14);
 }

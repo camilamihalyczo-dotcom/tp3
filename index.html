@@ -3,37 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>A Contrarreloj - TP3</title>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
 <style>
-  body {
-    margin: 0;
-    background: #16141f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-  }
-  /* El canvas se dibuja siempre a 700x700, pero se muestra al tamaño que
-     entre en la ventana: así se ve completo sin tener que bajar el zoom.
-     p5 ajusta solo las coordenadas del mouse, no hay que tocar nada más. */
-  canvas {
-    display: block;
-    /* el !important es necesario porque p5 le pone el tamaño al canvas
-       como estilo en línea, y si no, gana el suyo */
-    width: min(100vw, 100vh, 700px) !important;
-    height: min(100vw, 100vh, 700px) !important;
-  }
-  .precarga { position: absolute; visibility: hidden; }
+body {
+  margin: 0;
+  background: #16141f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+canvas {
+  display: block;
+  width: min(100vw, 100vh, 700px) !important;
+  height: min(100vw, 100vh, 700px) !important;
+}
+
+.precarga {
+  position: absolute;
+  visibility: hidden;
+}
 </style>
 </head>
+
 <body>
-<!-- El navegador solo descarga una fuente cuando algo del HTML la usa, y el
-     canvas no cuenta. Estos dos spans invisibles la fuerzan a cargar. -->
+
 <span class="precarga" style="font-family:'Press Start 2P'">.</span>
 <span class="precarga" style="font-family:'Nunito';font-weight:900">.</span>
+
 <script src="sketch.js"></script>
+
 </body>
 </html>
