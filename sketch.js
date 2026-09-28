@@ -1561,17 +1561,31 @@ function pantallaMenuPepino() {
 
   fill(190);
   textSize(16);
-  text("Ahora empieza la competencia de precisión", ANCHO / 2, 320);
+  if (gameMode === "1J") {
+    text("Ahora poné a prueba tu puntería", ANCHO / 2, 320);
 
-  fill(255);
-  textStyle(BOLD);
-  textSize(20);
-  text("JUGADOR 1  VS  JUGADOR 2", ANCHO / 2, 365);
+    fill(255);
+    textStyle(BOLD);
+    textSize(20);
+    text("DESAFÍO DE PRECISIÓN", ANCHO / 2, 365);
 
-  fill(COLOR_BUENO);
-  textSize(18);
-  text("5 rondas · el corte más cercano gana", ANCHO / 2, 410);
-  textStyle(NORMAL);
+    fill(COLOR_BUENO);
+    textSize(18);
+    text("5 rondas · ¡sumá el mayor puntaje posible!", ANCHO / 2, 410);
+    textStyle(NORMAL);
+  } else {
+    text("Ahora empieza la competencia de precisión", ANCHO / 2, 320);
+
+    fill(255);
+    textStyle(BOLD);
+    textSize(20);
+    text("JUGADOR 1  VS  JUGADOR 2", ANCHO / 2, 365);
+
+    fill(COLOR_BUENO);
+    textSize(18);
+    text("5 rondas · el corte más cercano gana", ANCHO / 2, 410);
+    textStyle(NORMAL);
+  }
 
   dibujarBoton(BOTON_CONTINUAR_PEPINO, "IR AL PEPINO");
   dibujarIconoSonido(BOTON_SONIDO);
@@ -1588,30 +1602,57 @@ function pantallaInstruccionesPepino() {
   fill(24, 22, 36, 215);
   rect(45, 55, ANCHO - 90, 525, 12);
 
-  dibujarTitulo("DUELO DE CORTE", 100, 19);
+  if (gameMode === "1J") {
+    dibujarTitulo("DESAFÍO DE PRECISIÓN", 100, 19);
 
-  textFont(FUENTE_TEXTO);
-  textAlign(CENTER, CENTER);
+    textFont(FUENTE_TEXTO);
+    textAlign(CENTER, CENTER);
 
-  fill(255);
-  textStyle(BOLD);
-  textSize(22);
-  text("5 RONDAS", ANCHO / 2, 155);
-  textStyle(NORMAL);
+    fill(255);
+    textStyle(BOLD);
+    textSize(22);
+    text("5 RONDAS", ANCHO / 2, 155);
+    textStyle(NORMAL);
 
-  fill(220);
-  textSize(17);
-  text("1. Los dos jugadores miran la misma línea.", ANCHO / 2, 215);
-  text("2. La línea desaparece.", ANCHO / 2, 260);
-  text("3. J1 corta con CLICK / TOQUE / ESPACIO.", ANCHO / 2, 305);
-  text("4. Después corta J2 sin ver el resultado de J1.", ANCHO / 2, 350);
-  text("5. El corte más cercano gana 1 punto.", ANCHO / 2, 395);
+    fill(220);
+    textSize(17);
+    text("1. Memorizá la posición de la línea.", ANCHO / 2, 215);
+    text("2. La línea desaparece.", ANCHO / 2, 260);
+    text("3. Cortá con CLICK / TOQUE / ESPACIO.", ANCHO / 2, 305);
+    text("4. Cuanto más cerca cortes, más puntos sumás.", ANCHO / 2, 350);
+    text("   (≤5px: 3 pts  |  ≤20px: 2 pts  |  ≤50px: 1 pto)", ANCHO / 2, 395);
 
-  fill(COLOR_ACENTO);
-  textStyle(BOLD);
-  textSize(18);
-  text("Después de 5 rondas gana quien tenga más puntos.", ANCHO / 2, 455);
-  textStyle(NORMAL);
+    fill(COLOR_ACENTO);
+    textStyle(BOLD);
+    textSize(18);
+    text("¡Intentá conseguir la puntuación perfecta de 15 puntos!", ANCHO / 2, 455);
+    textStyle(NORMAL);
+  } else {
+    dibujarTitulo("DUELO DE CORTE", 100, 19);
+
+    textFont(FUENTE_TEXTO);
+    textAlign(CENTER, CENTER);
+
+    fill(255);
+    textStyle(BOLD);
+    textSize(22);
+    text("5 RONDAS", ANCHO / 2, 155);
+    textStyle(NORMAL);
+
+    fill(220);
+    textSize(17);
+    text("1. Los dos jugadores miran la misma línea.", ANCHO / 2, 215);
+    text("2. La línea desaparece.", ANCHO / 2, 260);
+    text("3. J1 corta con CLICK / TOQUE / ESPACIO.", ANCHO / 2, 305);
+    text("4. Después corta J2 sin ver el resultado de J1.", ANCHO / 2, 350);
+    text("5. El corte más cercano gana 1 punto.", ANCHO / 2, 395);
+
+    fill(COLOR_ACENTO);
+    textStyle(BOLD);
+    textSize(18);
+    text("Después de 5 rondas gana quien tenga más puntos.", ANCHO / 2, 455);
+    textStyle(NORMAL);
+  }
 
   dibujarBotonSecundario(BOTON_VOLVER_MENU_PEPINO, "‹ ATRÁS", false, 14);
   dibujarBoton(BOTON_EMPEZAR_PEPINO, "EMPEZAR");
@@ -1684,7 +1725,7 @@ function pantallaMemorizarPepino() {
   fill(45);
   textStyle(BOLD);
   textSize(17);
-  text("Los dos jugadores tienen que recordar este lugar", ANCHO / 2, 590);
+  text(gameMode === "1J" ? "Memorizá bien este lugar para cortar" : "Los dos jugadores tienen que recordar este lugar", ANCHO / 2, 590);
   textStyle(NORMAL);
 
   if (millis() - pepinoMomentoLinea >= DURACION_MARCA_PEPINO) {
@@ -1703,8 +1744,13 @@ function pantallaJuegoPepino() {
   textFont(FUENTE_TITULO);
   textAlign(CENTER, CENTER);
   textSize(18);
-  fill(turnoPepino === 1 ? COLOR_J1 : COLOR_J2);
-  text(turnoPepino === 1 ? "TURNO J1" : "TURNO J2", ANCHO / 2, 92);
+  if (gameMode === "1J") {
+    fill(COLOR_J1);
+    text("¡A CORTAR!", ANCHO / 2, 92);
+  } else {
+    fill(turnoPepino === 1 ? COLOR_J1 : COLOR_J2);
+    text(turnoPepino === 1 ? "TURNO J1" : "TURNO J2", ANCHO / 2, 92);
+  }
 
   let minX = PEPINO_X - PEPINO_ANCHO / 2 + 28;
   let maxX = PEPINO_X + PEPINO_ANCHO / 2 - 28;
@@ -1774,7 +1820,7 @@ function pantallaCortePepino() {
   }
 
   if (millis() - pepinoMomentoCorte >= DURACION_ANIMACION_CORTE) {
-    if (turnoPepino === 1) {
+    if (turnoPepino === 1 && gameMode === "2J") {
       // No revelamos la distancia de J1: J2 debe depender de su memoria.
       turnoPepino = 2;
       prepararCuchilloPepino();
@@ -1817,6 +1863,14 @@ function pantallaEsperaJ2Pepino() {
 // GANADOR DE CADA RONDA
 // ------------------------------------------------------
 function calcularGanadorRondaPepino() {
+  if (gameMode === "1J") {
+    let d = diferenciaPepinoJ1;
+    let pts = d <= 5 ? 3 : d <= 20 ? 2 : d <= 50 ? 1 : 0;
+    puntosPepinoJ1 += pts;
+    ganadorRondaPepino = pts;
+    return;
+  }
+
   // Tolerancia mínima para considerar un empate real.
   const TOLERANCIA_EMPATE = 0.5;
 
@@ -1849,10 +1903,12 @@ function pantallaResultadoRondaPepino() {
   strokeWeight(5);
   line(cortePepinoJ1, PEPINO_Y - 55, cortePepinoJ1, PEPINO_Y + 55);
 
-  // Corte J2
-  stroke(COLOR_J2);
-  strokeWeight(5);
-  line(cortePepinoJ2, PEPINO_Y - 55, cortePepinoJ2, PEPINO_Y + 55);
+  if (gameMode === "2J") {
+    // Corte J2
+    stroke(COLOR_J2);
+    strokeWeight(5);
+    line(cortePepinoJ2, PEPINO_Y - 55, cortePepinoJ2, PEPINO_Y + 55);
+  }
   noStroke();
 
   dibujarPanel(105, 72, ANCHO - 210, 215);
@@ -1861,35 +1917,61 @@ function pantallaResultadoRondaPepino() {
   textAlign(CENTER, CENTER);
   textSize(19);
 
-  if (ganadorRondaPepino === "J1") {
+  if (gameMode === "1J") {
+    let estrellas = ganadorRondaPepino === 3 ? "★★★" : ganadorRondaPepino === 2 ? "★★" : ganadorRondaPepino === 1 ? "★" : "";
+    let textoResultado = ganadorRondaPepino === 3 ? "¡PERFECTO! +3 PTS"
+      : ganadorRondaPepino === 2 ? "¡MUY BIEN! +2 PTS"
+      : ganadorRondaPepino === 1 ? "¡BIEN! +1 PTO"
+      : "¡CERCA! +0 PTS";
+
+    fill(ganadorRondaPepino > 0 ? COLOR_BUENO : COLOR_TRAMPA);
+    text(textoResultado, ANCHO / 2, 112);
+
+    textFont(FUENTE_TEXTO);
+    textStyle(BOLD);
+    textSize(18);
     fill(COLOR_J1);
-    text("¡PUNTO J1!", ANCHO / 2, 112);
-  } else if (ganadorRondaPepino === "J2") {
-    fill(COLOR_J2);
-    text("¡PUNTO J2!", ANCHO / 2, 112);
+    text("Distancia: " + nf(diferenciaPepinoJ1, 1, 1) + " px " + estrellas, ANCHO / 2, 165);
+
+    fill(235);
+    textSize(16);
+    text("Puntaje acumulado: " + puntosPepinoJ1 + " / " + (rondaPepino * 3) + " pts", ANCHO / 2, 205);
+
+    textStyle(NORMAL);
+    fill(190);
+    textSize(13);
+    text("Menor distancia = más puntos", ANCHO / 2, 247);
   } else {
-    fill(255);
-    text("¡EMPATE!", ANCHO / 2, 112);
+    if (ganadorRondaPepino === "J1") {
+      fill(COLOR_J1);
+      text("¡PUNTO J1!", ANCHO / 2, 112);
+    } else if (ganadorRondaPepino === "J2") {
+      fill(COLOR_J2);
+      text("¡PUNTO J2!", ANCHO / 2, 112);
+    } else {
+      fill(255);
+      text("¡EMPATE!", ANCHO / 2, 112);
+    }
+
+    textFont(FUENTE_TEXTO);
+    textStyle(BOLD);
+    textSize(17);
+
+    fill(COLOR_J1);
+    text("J1: " + nf(diferenciaPepinoJ1, 1, 1) + " px", ANCHO / 2, 165);
+
+    fill(COLOR_J2);
+    text("J2: " + nf(diferenciaPepinoJ2, 1, 1) + " px", ANCHO / 2, 200);
+
+    textStyle(NORMAL);
+    fill(190);
+    textSize(13);
+    text("Menor distancia = mejor corte", ANCHO / 2, 247);
   }
-
-  textFont(FUENTE_TEXTO);
-  textStyle(BOLD);
-  textSize(17);
-
-  fill(COLOR_J1);
-  text("J1: " + nf(diferenciaPepinoJ1, 1, 1) + " px", ANCHO / 2, 165);
-
-  fill(COLOR_J2);
-  text("J2: " + nf(diferenciaPepinoJ2, 1, 1) + " px", ANCHO / 2, 200);
-
-  textStyle(NORMAL);
-  fill(190);
-  textSize(13);
-  text("Menor distancia = mejor corte", ANCHO / 2, 247);
 
   dibujarBoton(
     BOTON_SIGUIENTE_RONDA,
-    rondaPepino < TOTAL_RONDAS_PEPINO ? "SIGUIENTE RONDA" : "VER GANADOR",
+    rondaPepino < TOTAL_RONDAS_PEPINO ? "SIGUIENTE RONDA" : (gameMode === "1J" ? "VER RESULTADO" : "VER GANADOR"),
     17
   );
 }
@@ -1914,40 +1996,78 @@ function pantallaFinPepino() {
 
   textFont(FUENTE_TEXTO);
   textAlign(CENTER, CENTER);
-  textStyle(BOLD);
 
-  fill(COLOR_J1);
-  textSize(24);
-  text("J1", ANCHO / 2 - 105, 230);
+  if (gameMode === "1J") {
+    textStyle(BOLD);
+    fill(COLOR_ACENTO);
+    textSize(22);
+    text("PUNTAJE OBTENIDO", ANCHO / 2, 220);
 
-  fill(COLOR_J2);
-  text("J2", ANCHO / 2 + 105, 230);
+    textSize(52);
+    fill(COLOR_J1);
+    text(puntosPepinoJ1 + " / 15", ANCHO / 2, 285);
 
-  textSize(48);
-  fill(COLOR_J1);
-  text(puntosPepinoJ1, ANCHO / 2 - 105, 295);
+    textStyle(NORMAL);
 
-  fill(255);
-  text("-", ANCHO / 2, 295);
+    let calificacion = "";
+    let colorCalif = COLOR_BUENO;
+    if (puntosPepinoJ1 === 15) {
+      calificacion = "¡PERFECTO! MAESTRO DEL CORTE";
+      colorCalif = COLOR_BUENO;
+    } else if (puntosPepinoJ1 >= 12) {
+      calificacion = "¡EXCELENTE PUNTERÍA!";
+      colorCalif = COLOR_BUENO;
+    } else if (puntosPepinoJ1 >= 8) {
+      calificacion = "¡BUEN TRABAJO!";
+      colorCalif = COLOR_ACENTO;
+    } else {
+      calificacion = "¡SEGUÍ PRACTICANDO!";
+      colorCalif = COLOR_TRAMPA;
+    }
 
-  fill(COLOR_J2);
-  text(puntosPepinoJ2, ANCHO / 2 + 105, 295);
+    dibujarTitulo(calificacion, 375, 20, colorCalif);
 
-  textStyle(NORMAL);
-
-  if (puntosPepinoJ1 > puntosPepinoJ2) {
-    dibujarTitulo("¡GANA J1!", 390, 25, COLOR_J1);
-  } else if (puntosPepinoJ2 > puntosPepinoJ1) {
-    dibujarTitulo("¡GANA J2!", 390, 25, COLOR_J2);
+    textFont(FUENTE_TEXTO);
+    textAlign(CENTER, CENTER);
+    fill(190);
+    textSize(15);
+    text("Completaste las " + TOTAL_RONDAS_PEPINO + " rondas de precisión", ANCHO / 2, 445);
   } else {
-    dibujarTitulo("¡EMPATE!", 390, 25, 255);
-  }
+    textStyle(BOLD);
 
-  textFont(FUENTE_TEXTO);
-  textAlign(CENTER, CENTER);
-  fill(190);
-  textSize(15);
-  text("Resultado después de " + TOTAL_RONDAS_PEPINO + " rondas", ANCHO / 2, 445);
+    fill(COLOR_J1);
+    textSize(24);
+    text("J1", ANCHO / 2 - 105, 230);
+
+    fill(COLOR_J2);
+    text("J2", ANCHO / 2 + 105, 230);
+
+    textSize(48);
+    fill(COLOR_J1);
+    text(puntosPepinoJ1, ANCHO / 2 - 105, 295);
+
+    fill(255);
+    text("-", ANCHO / 2, 295);
+
+    fill(COLOR_J2);
+    text(puntosPepinoJ2, ANCHO / 2 + 105, 295);
+
+    textStyle(NORMAL);
+
+    if (puntosPepinoJ1 > puntosPepinoJ2) {
+      dibujarTitulo("¡GANA J1!", 390, 25, COLOR_J1);
+    } else if (puntosPepinoJ2 > puntosPepinoJ1) {
+      dibujarTitulo("¡GANA J2!", 390, 25, COLOR_J2);
+    } else {
+      dibujarTitulo("¡EMPATE!", 390, 25, 255);
+    }
+
+    textFont(FUENTE_TEXTO);
+    textAlign(CENTER, CENTER);
+    fill(190);
+    textSize(15);
+    text("Resultado después de " + TOTAL_RONDAS_PEPINO + " rondas", ANCHO / 2, 445);
+  }
 
   dibujarBoton(BOTON_REINTENTAR_PEPINO, "SIGUIENTE NIVEL");
   dibujarBotonSecundario(BOTON_MENU_FINAL_PEPINO, "MENÚ PRINCIPAL", false, 14);
@@ -1968,17 +2088,31 @@ function dibujarHUDCompetenciaPepino() {
   textStyle(BOLD);
   textSize(16);
 
-  textAlign(LEFT, CENTER);
-  fill(COLOR_J1);
-  text("J1  " + puntosPepinoJ1, 20, 26);
+  if (gameMode === "1J") {
+    textAlign(LEFT, CENTER);
+    fill(COLOR_J1);
+    text("PUNTOS: " + puntosPepinoJ1, 20, 26);
 
-  textAlign(CENTER, CENTER);
-  fill(255);
-  text("RONDA " + rondaPepino + " / " + TOTAL_RONDAS_PEPINO, ANCHO / 2, 26);
+    textAlign(CENTER, CENTER);
+    fill(255);
+    text("RONDA " + rondaPepino + " / " + TOTAL_RONDAS_PEPINO, ANCHO / 2, 26);
 
-  textAlign(RIGHT, CENTER);
-  fill(COLOR_J2);
-  text(puntosPepinoJ2 + "  J2", ANCHO - 20, 26);
+    textAlign(RIGHT, CENTER);
+    fill(COLOR_ACENTO);
+    text("MÁX: " + (rondaPepino * 3) + " PTS", ANCHO - 20, 26);
+  } else {
+    textAlign(LEFT, CENTER);
+    fill(COLOR_J1);
+    text("J1  " + puntosPepinoJ1, 20, 26);
+
+    textAlign(CENTER, CENTER);
+    fill(255);
+    text("RONDA " + rondaPepino + " / " + TOTAL_RONDAS_PEPINO, ANCHO / 2, 26);
+
+    textAlign(RIGHT, CENTER);
+    fill(COLOR_J2);
+    text(puntosPepinoJ2 + "  J2", ANCHO - 20, 26);
+  }
 
   textStyle(NORMAL);
   dibujarIconoSonido(BOTON_SONIDO);
